@@ -1,6 +1,6 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <MainPage msg="Welcome to the Ultimate Lineup Picker"/>
+  <MainPage />
 </template>
 
 <script>
