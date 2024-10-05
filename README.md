@@ -17,7 +17,7 @@ TODO: Finish development setup
 
 ## Planned Features
 
-- [ ] Create a GUI that intakes a fantasy football team of preset size
+- [ ] Create a GUI that intakes a fantasy football team
 - [ ] Create a backend that persists player data
 - [ ] Query a sportsbook API for player props based on player data
 - [ ] Persist results from API query
@@ -28,7 +28,12 @@ TODO: Finish development setup
 
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
-- [ ] Allow users to adjust team size and player amount (ie, 2 QB, Super Flex, 1 WR, etc)
+- [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
+
+## Planned Improvements
+
+- [ ] Enhance UI to make interface prettier
+- [ ] Divide Vue components into more modularized pieces
 
 ## Tools Used
 
