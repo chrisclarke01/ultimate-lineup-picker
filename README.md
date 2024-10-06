@@ -5,36 +5,52 @@ Ultimate Lineup Picker is a tool that uses Sportsbook player props to determine 
 ## Table of Contents
 
 - [Development Setup](#development-setup)
-- [Planned Features](#planned-features)
-- [Stretch Goals](#stretch-goals)
+- [Project Steps](#project-steps)
+- [Planned Improvements](#planned-improvements)
+- [Housekeeping](#housekeeping)
 - [Tools Used](#tools-used)
 
 ## Development Setup
 
 To set up your development environment for this project, follow these steps:
 
-TODO: Finish development setup
+1. Clone repository
+2. Ensure Python and Vue are installed
+3. To install frontend, navigate to frontend/ and enter `npm install -g @vue/cli`
+4. Acquire API keys and set them as an environment variable named `ODDS_API_KEY`
 
-## Planned Features
+## Project Steps
 
-- [ ] Create a GUI that intakes a fantasy football team
-- [ ] Create a backend that persists player data
-- [ ] Query a sportsbook API for player props based on player data
-- [ ] Persist results from API query
-- [ ] Create algorithm to translate player props for QB, RB, WR, TE, D/ST, and K into inferred fantasy points
-- [ ] Pick ideal fantasy lineup based on inferred fantasy points
+- [X] Create a frontend prototype that contains a basic splash page, detailing what the project is
+- [X] Add a prototype input to the front page that can intake n players and persist the data
+- [X] Create a Python script that can intake n players
+- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
+- [ ] Associate estimated player stats with each player in a fantasy context (ie, quarterbacks have passing yds associated, receivers have receiving yds, etc)
+- [ ] Write algorithm to translate estimated player stats into projected fantasy football points
+- [ ] Improve algorithm to return ideal starting lineup based on predetermined team size and player amount
+- [ ] Update frontend to send input players to the input of the Python script
+- [ ] Update Python script to return ideal lineup to the frontend
+- [ ] Update frontend to display the ideal lineup on-screen
 
-## Stretch Goals
+## Planned Improvements
 
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
-
-## Planned Improvements
-
+- [ ] Fine-tune estimated fantasy points by including more data points (ie, estimated defensive turnovers, estimated fumbles, etc)
 - [ ] Enhance UI to make interface prettier
 - [ ] Divide Vue components into more modularized pieces
 
+## Housekeeping
+
+- Properly document APIs and used tools in Tools Used
+- Add a license
+- Improve Development Setup to outline all necessary steps
+- Add proper documentation
+- Modularize frontend and backend to be better organized and maintainable
+
 ## Tools Used
 
-TODO: Finish tools used section
+- npm
+- Python
+- Vue
