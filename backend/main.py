@@ -13,6 +13,8 @@ def main():
         print('Failed to fetch posts from API.')
 
 if __name__ == '__main__':
+    getPlayerInfo()
+
     # Intake players from command line.
     # Later, this will be passed in from the frontend
     players = []
