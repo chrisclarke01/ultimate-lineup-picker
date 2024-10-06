@@ -1,31 +1,27 @@
 from odds_info import getOdds
-from player_info import getPlayerInfo
 
-def main():
+def main(players):
     # Query odds API
-    posts = getOdds()
+    posts = getOdds(players)
 
-    # If successful, print results, and request information
-    # Later, this is where algorithm execution will begin
-    if posts:
-        print(posts.json())
-    else:
-        print('Failed to fetch posts from API.')
+    #if posts:
+        #print(posts.json())
+    #else:
+        #print('Failed to fetch posts from API.')
 
 if __name__ == '__main__':
-    getPlayerInfo()
-
-    # Intake players from command line.
-    # Later, this will be passed in from the frontend
     players = []
+
     while (True):
-        player = input("Input players on team. Type COMPLETE when all players are entered: ")
-        if (player == "COMPLETE"):
+        playerData = []
+
+        checkComplete = input('Enter anything to continue. Enter COMPLETE when done: ')
+        if (checkComplete == "COMPLETE"):
             break
         else:
-            players.append(player)
+            playerData.append(input('Enter player name: '))
+            playerData.append(input('Enter player position: '))
+            playerData.append(input('Enter player team: '))
+            players.append(playerData)
 
-    print('\nYour team:')
-    for player in players:
-            print(player)
-    #main()
+    main(players)
