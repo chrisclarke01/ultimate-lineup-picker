@@ -1,13 +1,7 @@
 from odds_info import getOdds
 
 def main(players):
-    # Query odds API
-    posts = getOdds(players)
-
-    #if posts:
-        #print(posts.json())
-    #else:
-        #print('Failed to fetch posts from API.')
+    getOdds(players)
 
 if __name__ == '__main__':
     players = []
@@ -23,5 +17,4 @@ if __name__ == '__main__':
             playerData.append(input('Enter player position: '))
             playerData.append(input('Enter player team: '))
             players.append(playerData)
-
     main(players)

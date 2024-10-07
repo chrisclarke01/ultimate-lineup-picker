@@ -1,5 +1,5 @@
 import requests
-import json
+import pprint
 import os
 
 PLAYER_NAME_INDEX = 0
@@ -24,8 +24,7 @@ OPPOSING_QB_SACKS = 'player_sacks'
 OPPOSING_TEAM_TOTALS = 'team_totals'
 
 # Kicking Markets
-EXTRA_POINTS = 'player_pats'
-FIELD_GOALS = 'player_kicking_points'
+KICKING_POINTS = 'player_kicking_points'
 
 # Miscellaneous Markets
 TOTAL_TDS = 'player_rush_reception_tds'
@@ -41,29 +40,47 @@ def getOdds(players):
         playerTeam = player[PLAYER_TEAM_INDEX]
 
         gameEventEndpoint = url + '/v4/sports/americanfootball_nfl/events?apiKey=' + apiKey
+        games = hitApi(gameEventEndpoint)
+        for game in games:
+            if game['home_team'] == playerTeam or game['away_team'] == playerTeam:
+                player.append(game['id'])
 
-        try:
-            response = requests.get(gameEventEndpoint)
-
-            if response.status_code == 200:
-                print('Remaining Requests: ' + response.headers['x-requests-remaining'])
-                print('Used Requests: ', response.headers['x-requests-used'])
-                json = response.json()
-
-                for game in json:
-                    if game['home_team'] == playerTeam or game['away_team'] == playerTeam:
-                        player.append(game['id'])
-                        print(player)
-
-            lineEndpoint = url + '/v4/sports/americanfootball_nfl/events/' + player[GAME_ID_INDEX] + '/odds?apiKey=' + apiKey + '&regions=us&markets='
-            if playerPosition == 'QB':
-                lineEndpoint = lineEndpoint + PASS_TDS + ',' + PASS_YARDS + ',' + INTERCEPTIONS
-                response = requests.get(lineEndpoint)
-                if response.status_code == 200:
-                    print(response.json())
-            else:
-                print('Error: ', response.status_code)
-                return None
-        except requests.exceptions.RequestException as e:
-            print('Error: ', e)
-            return None
+        propsEndPoint = url + '/v4/sports/americanfootball_nfl/events/' + player[GAME_ID_INDEX] + '/odds?apiKey=' + apiKey + '&regions=us&oddsFormat=american&markets=' + getPropsEndpoint(playerPosition)
+        playerProps = hitApi(propsEndPoint)
+        playerProps = playerProps['bookmakers'][0]['markets']
+        for market in playerProps:
+            props = []
+            props.append(market['key'])
+            for outcome in market['outcomes']:
+                if outcome['description'] == playerName:
+                    pointAndOdds = []
+                    pointAndOdds.append(outcome['name'])
+                    pointAndOdds.append(outcome['price'])
+                    pointAndOdds.append(outcome['point'])
+                    props.append(pointAndOdds)
+            player.append(props)
+        pprint.pprint(player)
+        
+def hitApi(endpoint):
+    try:
+        response = requests.get(endpoint)
+        if response.status_code == 200:
+            print('Remaining Requests: ' + response.headers['x-requests-remaining'])
+            print('Used Requests: ', response.headers['x-requests-used'])
+            return response.json()
+    except requests.exceptions.RequestException as e:
+        print('Error: ', e)
+        return None
+    
+def getPropsEndpoint(playerPosition):
+    if playerPosition == 'QB':
+        return PASS_YARDS + ',' + PASS_TDS + ',' + INTERCEPTIONS
+    elif playerPosition == 'RB' or playerPosition == 'WR' or playerPosition == 'TE':
+        return RUSH_YARDS + ',' + TOTAL_TDS + ',' + RECEPTIONS + ',' + RECEIVING_YARDS
+    elif playerPosition == 'DST':
+        return 'TODO'
+    elif playerPosition == 'K':
+        return KICKING_POINTS
+    else:
+        print('Error: ' + playerPosition + ' is not a known player position.')
+        return None
