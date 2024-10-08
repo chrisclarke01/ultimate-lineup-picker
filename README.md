@@ -24,9 +24,9 @@ To set up your development environment for this project, follow these steps:
 - [X] Create a frontend prototype that contains a basic splash page, detailing what the project is
 - [X] Add a prototype input to the front page that can intake n players and persist the data
 - [X] Create a Python script that can intake n players
-- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
-- [ ] Associate estimated player stats with each player in a fantasy context (ie, quarterbacks have passing yds associated, receivers have receiving yds, etc)
-- [ ] Write algorithm to translate estimated player stats into projected fantasy football points
+- [X] Allow input differentiation between players and D/STs
+- [X] Correctly grab relevant fantasy stats for D/STs
+- [X] Write algorithm to translate estimated player stats into projected fantasy football points
 - [ ] Improve algorithm to return ideal starting lineup based on predetermined team size and player amount
 - [ ] Update frontend to send input players to the input of the Python script
 - [ ] Update Python script to return ideal lineup to the frontend
@@ -34,6 +34,9 @@ To set up your development environment for this project, follow these steps:
 
 ## Planned Improvements
 
+- [ ] Add a way to restrict odds for only the immediate next game being played
+- [ ] Use odds price to improve calculations on over/unders
+- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)

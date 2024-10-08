@@ -1,3 +1,4 @@
+from point_estimator import estimatePoints
 import requests
 import pprint
 import os
@@ -7,31 +8,27 @@ PLAYER_POSITION_INDEX = 1
 PLAYER_TEAM_INDEX = 2
 GAME_ID_INDEX = 3
 
-# Passing Markets
+# QB Markets
 PASS_YARDS = 'player_pass_yds'
 PASS_TDS = 'player_pass_tds'
 INTERCEPTIONS = 'player_pass_interceptions'
-
-# Rushing Markets
 RUSH_YARDS = 'player_rush_yds'
 
-# Receiving Markets
-RECEIVING_YARDS = 'player_reception_yds'
+# RB/WR/TE Markets
+TOTAL_YARDS = 'player_pass_rush_reception_yds'
 RECEPTIONS = 'player_receptions'
 
-# Defensive Markets
-OPPOSING_QB_SACKS = 'player_sacks'
+# D/ST Markets
 OPPOSING_TEAM_TOTALS = 'team_totals'
 
-# Kicking Markets
-KICKING_POINTS = 'player_kicking_points'
-
-# Miscellaneous Markets
-TOTAL_TDS = 'player_rush_reception_tds'
+# K Markets
+FIELD_GOALS = 'player_field_goals'
+EXTRA_POINTS = 'player_pats'
 
 def getOdds(players):
     url = 'https://api.the-odds-api.com/'
     apiKey = os.environ['ODDS_API_KEY']
+    estimatedPointsPerPlayer = []
 
     for player in players:
         # Name, position, and team of current player
@@ -52,14 +49,21 @@ def getOdds(players):
             props = []
             props.append(market['key'])
             for outcome in market['outcomes']:
-                if outcome['description'] == playerName:
-                    pointAndOdds = []
+                pointAndOdds = []
+                if playerPosition == 'DST':
+                    if outcome['description'] != playerName:
+                        pointAndOdds.append(outcome['name'])
+                        pointAndOdds.append(outcome['price'])
+                        pointAndOdds.append(outcome['point'])
+                        props.append(pointAndOdds)
+                elif outcome['description'] == playerName:
                     pointAndOdds.append(outcome['name'])
                     pointAndOdds.append(outcome['price'])
                     pointAndOdds.append(outcome['point'])
                     props.append(pointAndOdds)
             player.append(props)
-        pprint.pprint(player)
+        estimatedPointsPerPlayer.append(estimatePoints(player))
+    return estimatedPointsPerPlayer
         
 def hitApi(endpoint):
     try:
@@ -74,13 +78,13 @@ def hitApi(endpoint):
     
 def getPropsEndpoint(playerPosition):
     if playerPosition == 'QB':
-        return PASS_YARDS + ',' + PASS_TDS + ',' + INTERCEPTIONS
+        return PASS_YARDS + ',' + RUSH_YARDS + ',' + PASS_TDS + ',' + INTERCEPTIONS
     elif playerPosition == 'RB' or playerPosition == 'WR' or playerPosition == 'TE':
-        return RUSH_YARDS + ',' + TOTAL_TDS + ',' + RECEPTIONS + ',' + RECEIVING_YARDS
+        return TOTAL_YARDS + ',' + RECEPTIONS
     elif playerPosition == 'DST':
-        return 'TODO'
+        return OPPOSING_TEAM_TOTALS
     elif playerPosition == 'K':
-        return KICKING_POINTS
+        return FIELD_GOALS + ',' + EXTRA_POINTS
     else:
         print('Error: ' + playerPosition + ' is not a known player position.')
         return None
