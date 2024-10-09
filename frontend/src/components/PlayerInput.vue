@@ -41,6 +41,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
 
 // Give each player a unique ID
 let id = 0
@@ -63,7 +64,13 @@ function removePlayer(player) { // eslint-disable-line no-unused-vars
 // Pass roster information for analysis
 function analyzeRoster() { // eslint-disable-line no-unused-vars
   if (players.value.length < 9) {
-    alert("Must input at least 9 players")
+    axios.get('http://localhost:5000/api/data')
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   } else {
     console.log(players.value)
   }
