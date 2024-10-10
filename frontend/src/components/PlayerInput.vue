@@ -3,12 +3,54 @@
     <h2>Input Team Below</h2>
       <div class="playerInput">
         <form @submit.prevent="addPlayer()">
-          <input v-model="newPlayer" required placeholder="Type Player Name">
+          <input v-model="name" required placeholder="Type Player Name">
+          <select v-model="position" name="position">
+            <option value="QB">QB</option>
+            <option value="WR">WR</option>
+            <option value="RB">RB</option>
+            <option value="TE">TE</option>
+            <option value="DST">D/ST</option>
+            <option value="K">K</option>
+          </select>
+          <select v-model="team" name="team">
+            <option value="Arizona Cardinals">Arizona Cardinals</option>
+            <option value="Atlanta Falcons">Atlanta Falcons</option>
+            <option value="Baltimore Ravens">Baltimore Ravens</option>
+            <option value="Buffalo Bills">Buffalo Bills</option>
+            <option value="Carolina Panthers">Carolina Panthers</option>
+            <option value="Chicago Bears">Chicago Bears</option>
+            <option value="Cincinnati Bengals">Cincinnati Bengals</option>
+            <option value="Cleveland Browns">Cleveland Browns</option>
+            <option value="Dallas Cowboys">Dallas Cowboys</option>
+            <option value="Denver Broncos">Denver Broncos</option>
+            <option value="Detroit Lions">Detroit Lions</option>
+            <option value="Green Bay Packers">Green Bay Packers</option>
+            <option value="Houston Texans">Houston Texans</option>
+            <option value="Indianapolis Colts">Indianapolis Colts</option>
+            <option value="Jacksonville Jaguars">Jacksonville Jaguars</option>
+            <option value="Kansas City Chiefs">Kansas City Chiefs</option>
+            <option value="Las Vegas Raiders">Las Vegas Raiders</option>
+            <option value="Los Angeles Chargers">Los Angeles Chargers</option>
+            <option value="Los Angeles Rams">Los Angeles Rams</option>
+            <option value="Miami Dolphins">Miami Dolphins</option>
+            <option value="Minnesota Vikings">Minnesota Vikings</option>
+            <option value="New England Patriots">New England Patriots</option>
+            <option value="New Orleans Saints">New Orleans Saints</option>
+            <option value="New York Giants">New York Giants</option>
+            <option value="New York Jets">New York Jets</option>
+            <option value="Philadelphia Eagles">Philadelphia Eagles</option>
+            <option value="Pittsburgh Steelers">Pittsburgh Steelers</option>
+            <option value="San Francisco 49ers">San Francisco 49ers</option>
+            <option value="Seattle Seahawks">Seattle Seahawks</option>
+            <option value="Tampa Bay Buccaneers">Tampa Bay Buccaneers</option>
+            <option value="Tennessee Titans">Tennessee Titans</option>
+            <option value="Washington Commanders">Washington Commanders</option>
+          </select>
           <button>Submit Player to Roster</button>
         </form>
         <ul>
           <li v-for="player in players" :key="player.id">
-            {{ player.name }}
+            {{ player.position }}: {{ player.name }}, {{ player.team }}
             <button @click="removePlayer(player)">Remove Player</button>
           </li>
         </ul>
@@ -47,13 +89,17 @@ import axios from 'axios'
 let id = 0
 
 // Create a newPlayer variable and an empty list to contain passed in players
-const newPlayer = ref('')
+const name = ref('')
+const position = ref('')
+const team = ref('')
 const players = ref([])
 
 // Add a player to the list
 function addPlayer() { // eslint-disable-line no-unused-vars
-  players.value.push({ id: id++, name: newPlayer.value })
-  newPlayer.value = ''
+  players.value.push({ id: id++, name: name.value, position: position.value, team: team.value })
+  name.value = ''
+  position.value = ''
+  team.value = ''
 }
 
 // Remove a player from the list
@@ -63,17 +109,22 @@ function removePlayer(player) { // eslint-disable-line no-unused-vars
 
 // Pass roster information for analysis
 function analyzeRoster() { // eslint-disable-line no-unused-vars
-  if (players.value.length < 9) {
-    axios.get('http://localhost:5000/api/data')
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  } else {
-    console.log(players.value)
-  }
+  axios.post(
+    'http://localhost:8080/players',
+    JSON.stringify({
+      name: name.value,
+      position: position.value,
+      team: team.value,
+    }), {
+      headers: {
+        // Remove headers
+      }
+    }
+  ).then(response => {
+    console.log(response.data)
+  }).catch(error => {
+    console.log(error);
+  });
 }
 </script>
 
