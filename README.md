@@ -28,13 +28,14 @@ To set up your development environment for this project, follow these steps:
 - [X] Correctly grab relevant fantasy stats for D/STs
 - [X] Write algorithm to translate estimated player stats into projected fantasy football points
 - [ ] Improve algorithm to return ideal starting lineup based on predetermined team size and player amount
-- [ ] Update frontend to send input players to the input of the Python script
+- [X] Update frontend to send input players to the input of the Python script
 - [ ] Update Python script to return ideal lineup to the frontend
 - [ ] Update frontend to display the ideal lineup on-screen
 
 ## Planned Improvements
 
-- [ ] Add a way to restrict odds for only the immediate next game being played
+- [ ] Add a counter of remaining API calls to frontend
+- [X] Add a way to restrict odds for only the immediate next game being played
 - [ ] Use odds price to improve calculations on over/unders
 - [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring

@@ -110,7 +110,7 @@ function removePlayer(player) { // eslint-disable-line no-unused-vars
 // Pass roster information for analysis
 function analyzeRoster() { // eslint-disable-line no-unused-vars
   axios.post(
-    'http://localhost:5000/players',
+    'http://localhost:5000/api/players',
     JSON.stringify({
       players: players.value
     }), {

@@ -1,21 +1,19 @@
 from point_estimator import estimatePoints
 import requests
-import pprint
+from datetime import date
 import os
-
-PLAYER_NAME_INDEX = 0
-PLAYER_POSITION_INDEX = 1
-PLAYER_TEAM_INDEX = 2
-GAME_ID_INDEX = 3
+import pprint
 
 # QB Markets
 PASS_YARDS = 'player_pass_yds'
 PASS_TDS = 'player_pass_tds'
 INTERCEPTIONS = 'player_pass_interceptions'
-RUSH_YARDS = 'player_rush_yds'
+QB_RUSH_YARDS = 'player_rush_yds'
 
 # RB/WR/TE Markets
-TOTAL_YARDS = 'player_pass_rush_reception_yds'
+RUSH_YARDS = 'player_rush_yds'
+RECEIVING_YARDS = 'player_reception_yds'
+TOTAL_TDS = 'player_anytime_td'
 RECEPTIONS = 'player_receptions'
 
 # D/ST Markets
@@ -30,40 +28,38 @@ def getOdds(players):
     apiKey = os.environ['ODDS_API_KEY']
     estimatedPointsPerPlayer = []
 
-    for player in players:
-        # Name, position, and team of current player
-        playerName = player[PLAYER_NAME_INDEX]
-        playerPosition = player[PLAYER_POSITION_INDEX]
-        playerTeam = player[PLAYER_TEAM_INDEX]
-
-        gameEventEndpoint = url + '/v4/sports/americanfootball_nfl/events?apiKey=' + apiKey
+    for player in players['players']:
+        gameEventEndpoint = url + 'v4/sports/americanfootball_nfl/events?apiKey=' + apiKey
         games = hitApi(gameEventEndpoint)
         for game in games:
-            if game['home_team'] == playerTeam or game['away_team'] == playerTeam:
-                player.append(game['id'])
+            if (game['home_team'] == player['team'] or game['away_team'] == player['team']) and isSoonestGame(game['commence_time']):
+                player['game_id'] = game['id']
 
-        propsEndPoint = url + '/v4/sports/americanfootball_nfl/events/' + player[GAME_ID_INDEX] + '/odds?apiKey=' + apiKey + '&regions=us&oddsFormat=american&markets=' + getPropsEndpoint(playerPosition)
+        propsEndPoint = url + 'v4/sports/americanfootball_nfl/events/' + player['game_id'] + '/odds?apiKey=' + apiKey + '&regions=us&oddsFormat=american&markets=' + getPropsEndpoint(player['position'])
+        print(propsEndPoint)
         playerProps = hitApi(propsEndPoint)
         playerProps = playerProps['bookmakers'][0]['markets']
+        player['props'] = {}
+
         for market in playerProps:
             props = []
-            props.append(market['key'])
             for outcome in market['outcomes']:
-                pointAndOdds = []
-                if playerPosition == 'DST':
-                    if outcome['description'] != playerName:
-                        pointAndOdds.append(outcome['name'])
-                        pointAndOdds.append(outcome['price'])
-                        pointAndOdds.append(outcome['point'])
-                        props.append(pointAndOdds)
-                elif outcome['description'] == playerName:
-                    pointAndOdds.append(outcome['name'])
-                    pointAndOdds.append(outcome['price'])
-                    pointAndOdds.append(outcome['point'])
-                    props.append(pointAndOdds)
-            player.append(props)
+                if player['position'] == 'DST':
+                    if outcome['description'] != player['name']:
+                        props.append(outcome)
+                elif outcome['description'] == player['name']:
+                    props.append(outcome)
+            player['props'][market['key']] = props
         estimatedPointsPerPlayer.append(estimatePoints(player))
     return estimatedPointsPerPlayer
+
+def isSoonestGame(gameTime):
+    ymdTime = gameTime.split('T')[0].split('-')
+    currentTime = str(date.today()).split('-')
+    t0 = date(int(ymdTime[0]), int(ymdTime[1]), int(ymdTime[2]))
+    t1 = date(int(currentTime[0]), int(currentTime[1]), int(currentTime[2]))
+    delta = t0 - t1
+    return int(delta.days) <= 8
         
 def hitApi(endpoint):
     try:
@@ -78,9 +74,9 @@ def hitApi(endpoint):
     
 def getPropsEndpoint(playerPosition):
     if playerPosition == 'QB':
-        return PASS_YARDS + ',' + RUSH_YARDS + ',' + PASS_TDS + ',' + INTERCEPTIONS
+        return PASS_YARDS + ',' + QB_RUSH_YARDS + ',' + PASS_TDS + ',' + INTERCEPTIONS
     elif playerPosition == 'RB' or playerPosition == 'WR' or playerPosition == 'TE':
-        return TOTAL_YARDS + ',' + RECEPTIONS
+        return RUSH_YARDS + ',' + TOTAL_TDS + ',' + RECEIVING_YARDS + ',' + RECEPTIONS
     elif playerPosition == 'DST':
         return OPPOSING_TEAM_TOTALS
     elif playerPosition == 'K':

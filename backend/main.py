@@ -1,19 +1,18 @@
 from odds_info import getOdds
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-import pprint
 
 app = Flask(__name__)
 CORS(app)
-@app.route('/players', methods=['GET', 'POST'])
+@app.route('/api/players', methods=['GET', 'POST'])
 def players():
-    players = request.data
-    pprint.pprint(players)
-    return players
+    content = request.json
+    return main(content)
 
 def main(players):
     odds = getOdds(players)
-    pprint.pprint(odds)
+    jsonify(odds)
+    return odds
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,79 +1,72 @@
 import pprint
 
-PLAYER_NAME_INDEX = 0
-PLAYER_POSITION_INDEX = 1
-
-MARKET_INDEX = 0
-OVER_INDEX = 1
-UNDER_INDEX = 2
-
-ODDS_INDEX = 1
-LINE_INDEX = 2
-
 # QB Modifiers
 PASS_YARD_MODIFIER = 0.04
 RUSH_YARD_MODIFIER = 0.1
-TD_MODIFIER = 4
+PASS_TD_MODIFIER = 4
 INT_MODIFIER = 2
 
 # RB/WR/TE Modifiers
 TOTAL_YARDS_MODIFIER = 0.1
 RECEPTIONS_MODIFIER = 1
+TD_MODIFIER = 6
 
-# DST Data Indices
+# DST Point Modifiers
 
 # K Point Modifiers
 FIELD_GOAL_MODIFIER = 3
 PAT_MODIFIER = 1
 
 def estimatePoints(player):
-    playerName = player[PLAYER_NAME_INDEX]
-    playerPosition = player[PLAYER_POSITION_INDEX]
+    playerPoints = [player['name']]
 
-    playerPoints = [playerName]
-
-    if playerPosition == 'QB':
+    if player['position'] == 'QB':
         playerPoints.append(inferQbPoints(player))
-    elif playerPosition == 'RB' or playerPosition == 'WR' or playerPosition == 'TE':
+    elif player['position'] == 'RB' or player['position'] == 'WR' or player['position'] == 'TE':
         playerPoints.append(inferRbWrTePoints(player))
-    elif playerPosition == 'DST':
+    elif player['position'] == 'DST':
         playerPoints.append(inferDstPoints(player))
-    elif playerPosition == 'K':
+    elif player['position'] == 'K':
         playerPoints.append(inferKPoints(player))
     else:
-        print('Error: ' + playerPosition + ' is not a known player position.')
+        print('Error: ' + player['name'] + ' is not a known player position.')
         return None
+    pprint.pprint(playerPoints)
     return playerPoints
     
 def inferQbPoints(player):
     totalPoints = 0.0
-    for dataPoint in player[4:]:
-        line = chooseLineFromOverUnder(dataPoint[OVER_INDEX], dataPoint[UNDER_INDEX])
-        if dataPoint[MARKET_INDEX] == 'player_pass_yds':
+    for prop, dataPoint in player['props'].items():
+        line = chooseLineFromOverUnder(dataPoint)
+        if prop == 'player_pass_yds':
             totalPoints = totalPoints + (PASS_YARD_MODIFIER * line)
-        elif dataPoint[MARKET_INDEX] == 'player_rush_yds':
+        elif prop == 'player_rush_yds':
             totalPoints = totalPoints + (RUSH_YARD_MODIFIER * line)
-        elif dataPoint[MARKET_INDEX] == 'player_pass_tds':
-            totalPoints = totalPoints + (TD_MODIFIER * line)
-        elif dataPoint[MARKET_INDEX] == 'player_pass_interceptions':
+        elif prop == 'player_pass_tds':
+            totalPoints = totalPoints + (PASS_TD_MODIFIER * line)
+        elif prop == 'player_pass_interceptions':
             totalPoints = totalPoints - (INT_MODIFIER * line)
     return totalPoints
 
 def inferRbWrTePoints(player):
     totalPoints = 0.0
-    for dataPoint in player[4:]:
-        line = chooseLineFromOverUnder(dataPoint[OVER_INDEX], dataPoint[UNDER_INDEX])
-        if dataPoint[MARKET_INDEX] == 'player_pass_rush_reception_yds':
-            totalPoints = totalPoints + (TOTAL_YARDS_MODIFIER * line)
-        elif dataPoint[MARKET_INDEX] == 'player_receptions':
-            totalPoints = totalPoints + (RECEPTIONS_MODIFIER * line)
+    for prop, dataPoint in player['props'].items():
+        if prop == 'player_anytime_td':
+            line = chooseLineFromAnyTimeTd(dataPoint)
+            totalPoints = totalPoints + (TD_MODIFIER * line)
+        else:
+            line = chooseLineFromOverUnder(dataPoint)
+            if prop == 'player_reception_yds' or prop == 'player_rush_yds':
+                totalPoints = totalPoints + (TOTAL_YARDS_MODIFIER * line)
+            elif prop == 'player_receptions':
+                totalPoints = totalPoints + (RECEPTIONS_MODIFIER * line)
     return totalPoints
 
 def inferDstPoints(player):
     totalPoints = 0.0
-    for dataPoint in player[4:]:
-        line = chooseLineFromOverUnder(dataPoint[OVER_INDEX], dataPoint[UNDER_INDEX])
-        if dataPoint[MARKET_INDEX] == 'team_totals':
+    for prop, dataPoint in player['props'].items():
+        line = chooseLineFromTeamTotals(dataPoint)
+        if prop == 'team_totals':
             if line == 0:
                 totalPoints = totalPoints + 5
             elif line >=1 and line <= 6:
@@ -92,20 +85,56 @@ def inferDstPoints(player):
 
 def inferKPoints(player):
     totalPoints = 0.0
-    for dataPoint in player[4:]:
-        line = chooseLineFromOverUnder(dataPoint[OVER_INDEX], dataPoint[UNDER_INDEX])
-        if dataPoint[MARKET_INDEX] == 'player_field_goals':
+    for prop, dataPoint in player['props'].items():
+        line = chooseLineFromOverUnder(dataPoint)
+        if prop == 'player_field_goals':
             totalPoints = totalPoints + (FIELD_GOAL_MODIFIER * line)
-        elif dataPoint[MARKET_INDEX] == 'player_pats':
+        elif prop == 'player_pats':
             totalPoints = totalPoints + (PAT_MODIFIER * line)
     return totalPoints
 
-def chooseLineFromOverUnder(over, under):
-    overOdds = int(over[ODDS_INDEX])
-    underOdds = int(under[ODDS_INDEX])
-    if overOdds == underOdds:
-        return over[LINE_INDEX] 
-    elif overOdds < underOdds:
-        return int(over[LINE_INDEX]) + 0.5
-    elif underOdds < overOdds:
-        return int(under[LINE_INDEX]) - 0.5
+def chooseLineFromOverUnder(dataPoint):
+    if dataPoint == None or not dataPoint:
+        return 0
+    else:
+        over = None
+        under = None
+        for line in dataPoint:
+            if line['name'] == 'Over':
+                over = line
+            elif line['name'] == 'Under':
+                under = line
+        
+        if over['price'] == under['price']:
+            return float(over['point'])
+        elif over['price'] < under['price']:
+            return float(over['point']) + 0.5
+        elif under['price'] < over['price']:
+            return float(under['point']) - 0.5
+    
+def chooseLineFromAnyTimeTd(dataPoint):
+    if dataPoint == None or not dataPoint:
+        return 0
+    else:
+        if float(dataPoint[0]['price']) < 135:
+            return 1
+        else:
+            return 0
+        
+def chooseLineFromTeamTotals(dataPoint):
+    if dataPoint == None or not dataPoint:
+        return 0
+    else:
+        closestLine = None
+        prices = []
+        for line in dataPoint:
+            prices.append(line['price'])
+        def difference(givenList):
+            return abs(givenList - 100)
+        closestLine = min(prices, key=difference)
+        for line in dataPoint:
+            if line['price'] == closestLine:
+                if line['name'] == 'Under':
+                    return float(line['point']) - 0.5
+                elif line['name'] == 'Over':
+                    return float(line['point']) + 0.5
