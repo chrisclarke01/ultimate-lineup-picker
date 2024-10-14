@@ -1,4 +1,5 @@
 from point_estimator import estimatePoints
+from lineup_picker import createLineup
 import requests
 from datetime import date
 import os
@@ -26,7 +27,14 @@ EXTRA_POINTS = 'player_pats'
 def getOdds(players):
     url = 'https://api.the-odds-api.com/'
     apiKey = os.environ['ODDS_API_KEY']
-    estimatedPointsPerPlayer = []
+
+    estimatedPointsPerPlayer = {}
+    estimatedPointsPerPlayer['QB'] = []
+    estimatedPointsPerPlayer['RB'] = []
+    estimatedPointsPerPlayer['WR'] = []
+    estimatedPointsPerPlayer['TE'] = []
+    estimatedPointsPerPlayer['DST'] = []
+    estimatedPointsPerPlayer['K'] = []
 
     for player in players['players']:
         gameEventEndpoint = url + 'v4/sports/americanfootball_nfl/events?apiKey=' + apiKey
@@ -50,8 +58,9 @@ def getOdds(players):
                 elif outcome['description'] == player['name']:
                     props.append(outcome)
             player['props'][market['key']] = props
-        estimatedPointsPerPlayer.append(estimatePoints(player))
-    return estimatedPointsPerPlayer
+        estimatedPointsPerPlayer[player['position']].append(estimatePoints(player))
+    pprint.pprint(createLineup(estimatedPointsPerPlayer))
+    return createLineup(estimatedPointsPerPlayer)
 
 def isSoonestGame(gameTime):
     ymdTime = gameTime.split('T')[0].split('-')

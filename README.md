@@ -29,6 +29,7 @@ To set up your development environment for this project, follow these steps:
 - [X] Write algorithm to translate estimated player stats into projected fantasy football points
 - [ ] Improve algorithm to return ideal starting lineup based on predetermined team size and player amount
 - [X] Update frontend to send input players to the input of the Python script
+- [ ] Find a way to inject precreated odds info to avoid using API requests
 - [ ] Update Python script to return ideal lineup to the frontend
 - [ ] Update frontend to display the ideal lineup on-screen
 
@@ -44,6 +45,7 @@ To set up your development environment for this project, follow these steps:
 - [ ] Fine-tune estimated fantasy points by including more data points (ie, estimated defensive turnovers, estimated fumbles, etc)
 - [ ] Enhance UI to make interface prettier
 - [ ] Divide Vue components into more modularized pieces
+- [ ] Rewrite backend to where players are a class to simplify code
 
 ## Housekeeping
 

@@ -31,7 +31,6 @@ def estimatePoints(player):
     else:
         print('Error: ' + player['name'] + ' is not a known player position.')
         return None
-    pprint.pprint(playerPoints)
     return playerPoints
     
 def inferQbPoints(player):
