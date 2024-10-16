@@ -27,9 +27,9 @@ To set up your development environment for this project, follow these steps:
 - [X] Allow input differentiation between players and D/STs
 - [X] Correctly grab relevant fantasy stats for D/STs
 - [X] Write algorithm to translate estimated player stats into projected fantasy football points
-- [ ] Improve algorithm to return ideal starting lineup based on predetermined team size and player amount
+- [X] Improve algorithm to return ideal starting lineup based on predetermined team size and player amount
 - [X] Update frontend to send input players to the input of the Python script
-- [ ] Find a way to inject precreated odds info to avoid using API requests
+- [X] Find a way to inject precreated odds info to avoid using API requests
 - [ ] Update Python script to return ideal lineup to the frontend
 - [ ] Update frontend to display the ideal lineup on-screen
 
