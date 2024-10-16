@@ -36,15 +36,16 @@ def estimatePoints(player):
 def inferQbPoints(player):
     totalPoints = 0.0
     for prop, dataPoint in player['props'].items():
-        line = chooseLineFromOverUnder(dataPoint)
-        if prop == 'player_pass_yds':
-            totalPoints = totalPoints + (PASS_YARD_MODIFIER * line)
-        elif prop == 'player_rush_yds':
-            totalPoints = totalPoints + (RUSH_YARD_MODIFIER * line)
-        elif prop == 'player_pass_tds':
-            totalPoints = totalPoints + (PASS_TD_MODIFIER * line)
-        elif prop == 'player_pass_interceptions':
-            totalPoints = totalPoints - (INT_MODIFIER * line)
+        if prop == 'player_pass_yds' or prop == 'player_pass_yds' or prop == 'player_pass_tds' or prop == 'player_pass_interceptions':
+            line = chooseLineFromOverUnder(dataPoint)
+            if prop == 'player_pass_yds':
+                totalPoints = totalPoints + (PASS_YARD_MODIFIER * line)
+            elif prop == 'player_rush_yds':
+                totalPoints = totalPoints + (RUSH_YARD_MODIFIER * line)
+            elif prop == 'player_pass_tds':
+                totalPoints = totalPoints + (PASS_TD_MODIFIER * line)
+            elif prop == 'player_pass_interceptions':
+                totalPoints = totalPoints - (INT_MODIFIER * line)
     return totalPoints
 
 def inferRbWrTePoints(player):
@@ -53,7 +54,7 @@ def inferRbWrTePoints(player):
         if prop == 'player_anytime_td':
             line = chooseLineFromAnyTimeTd(dataPoint)
             totalPoints = totalPoints + (TD_MODIFIER * line)
-        else:
+        elif prop == 'player_reception_yds' or prop == 'player_rush_yds' or prop == 'player_receptions':
             line = chooseLineFromOverUnder(dataPoint)
             if prop == 'player_reception_yds' or prop == 'player_rush_yds':
                 totalPoints = totalPoints + (TOTAL_YARDS_MODIFIER * line)
@@ -64,8 +65,8 @@ def inferRbWrTePoints(player):
 def inferDstPoints(player):
     totalPoints = 0.0
     for prop, dataPoint in player['props'].items():
-        line = chooseLineFromTeamTotals(dataPoint)
         if prop == 'team_totals':
+            line = chooseLineFromTeamTotals(dataPoint)
             if line == 0:
                 totalPoints = totalPoints + 5
             elif line >=1 and line <= 6:
@@ -85,11 +86,12 @@ def inferDstPoints(player):
 def inferKPoints(player):
     totalPoints = 0.0
     for prop, dataPoint in player['props'].items():
-        line = chooseLineFromOverUnder(dataPoint)
-        if prop == 'player_field_goals':
-            totalPoints = totalPoints + (FIELD_GOAL_MODIFIER * line)
-        elif prop == 'player_pats':
-            totalPoints = totalPoints + (PAT_MODIFIER * line)
+        if prop == 'player_field_goals' or prop == 'player_pats':
+            line = chooseLineFromOverUnder(dataPoint)
+            if prop == 'player_field_goals':
+                totalPoints = totalPoints + (FIELD_GOAL_MODIFIER * line)
+            elif prop == 'player_pats':
+                totalPoints = totalPoints + (PAT_MODIFIER * line)
     return totalPoints
 
 def chooseLineFromOverUnder(dataPoint):

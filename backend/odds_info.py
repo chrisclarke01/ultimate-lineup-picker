@@ -3,10 +3,10 @@ from lineup_picker import createLineup
 import requests
 from datetime import date
 import os
-import pprint
+import json
 
 # QB Markets
-PASS_YARDS = 'player_pass_yds'
+PASS_YARDS = 'player_pass_yds' 
 PASS_TDS = 'player_pass_tds'
 INTERCEPTIONS = 'player_pass_interceptions'
 QB_RUSH_YARDS = 'player_rush_yds'
@@ -43,23 +43,25 @@ def getOdds(players):
             if (game['home_team'] == player['team'] or game['away_team'] == player['team']) and isSoonestGame(game['commence_time']):
                 player['game_id'] = game['id']
 
-        propsEndPoint = url + 'v4/sports/americanfootball_nfl/events/' + player['game_id'] + '/odds?apiKey=' + apiKey + '&regions=us&oddsFormat=american&markets=' + getPropsEndpoint(player['position'])
-        print(propsEndPoint)
-        playerProps = hitApi(propsEndPoint)
-        playerProps = playerProps['bookmakers'][0]['markets']
-        player['props'] = {}
+        #propsEndPoint = url + 'v4/sports/americanfootball_nfl/events/' + player['game_id'] + '/odds?apiKey=' + apiKey + '&regions=us&oddsFormat=american&markets=' + getPropsEndpoint(player['position'])
+        #playerProps = hitApi(propsEndPoint)
+        
+        with open('testData.json') as input:
+            playerProps = json.load(input)
+            
+            playerProps = playerProps['bookmakers'][0]['markets']
+            player['props'] = {}
 
-        for market in playerProps:
-            props = []
-            for outcome in market['outcomes']:
-                if player['position'] == 'DST':
-                    if outcome['description'] != player['name']:
+            for market in playerProps:
+                props = []
+                for outcome in market['outcomes']:
+                    if player['position'] == 'DST':
+                        if outcome['description'] != player['name']:
+                            props.append(outcome)
+                    elif outcome['description'] == player['name']:
                         props.append(outcome)
-                elif outcome['description'] == player['name']:
-                    props.append(outcome)
-            player['props'][market['key']] = props
-        estimatedPointsPerPlayer[player['position']].append(estimatePoints(player))
-    pprint.pprint(createLineup(estimatedPointsPerPlayer))
+                player['props'][market['key']] = props
+            estimatedPointsPerPlayer[player['position']].append(estimatePoints(player))
     return createLineup(estimatedPointsPerPlayer)
 
 def isSoonestGame(gameTime):

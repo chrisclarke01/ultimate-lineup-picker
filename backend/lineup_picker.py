@@ -38,5 +38,5 @@ def getLargest(players):
     for player in players:
         if player[1] > bestPick[1]:
             bestPick = player
-    players.remove(player)
+    players.remove(bestPick)
     return bestPick
