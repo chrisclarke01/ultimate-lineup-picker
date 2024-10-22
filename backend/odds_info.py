@@ -40,7 +40,8 @@ def getOdds(players):
         gameEventEndpoint = url + 'v4/sports/americanfootball_nfl/events?apiKey=' + apiKey
         games = hitApi(gameEventEndpoint)
         for game in games:
-            if (game['home_team'] == player['team'] or game['away_team'] == player['team']) and isSoonestGame(game['commence_time']):
+            #if (game['home_team'] == player['team'] or game['away_team'] == player['team']) and isSoonestGame(game['commence_time']):
+            if (game['home_team'] == player['team'] or game['away_team'] == player['team']):
                 player['game_id'] = game['id']
 
         #propsEndPoint = url + 'v4/sports/americanfootball_nfl/events/' + player['game_id'] + '/odds?apiKey=' + apiKey + '&regions=us&oddsFormat=american&markets=' + getPropsEndpoint(player['position'])

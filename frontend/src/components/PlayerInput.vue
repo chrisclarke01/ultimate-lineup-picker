@@ -59,27 +59,6 @@
   </div>
 </template>
 
-<script>
-// https://stackoverflow.com/questions/71819204/how-do-i-change-a-boolean-variables-value-from-a-grandchild-component-in-this-v
-// for when conditional rendering needs to happen
-  export default {
-    name: 'MyButton',
-    props: {
-      label: String,
-      isVisible: Boolean
-    },
-
-    emits: [
-      'toggleVisibility',
-    ],
-
-    methods: {
-      handleClick() {
-        this.$emit('toggleVisibility')
-      }
-    }
-  }
-</script>
 
 <script setup>
 import { ref } from 'vue'
@@ -92,7 +71,23 @@ let id = 0
 const name = ref('')
 const position = ref('')
 const team = ref('')
-const players = ref([])
+const players = ref([
+  // Temporary testing data
+  {'id':'0', 'name':'Spencer Rattler', 'position':'QB', 'team':'New Orleans Saints'},
+  {'id':'1', 'name':'Javonte Williams', 'position':'RB', 'team':'Denver Broncos'},
+  {'id':'2', 'name':'Jaleel Mclaughlin', 'position':'RB', 'team':'Denver Broncos'},
+  {'id':'3', 'name':'Alvin Kamara', 'position':'RB', 'team':'New Orleans Saints'},
+  {'id':'4', 'name':'Jamaal Williams', 'position':'RB', 'team':'New Orleans Saints'},
+  {'id':'5', 'name':'Courtland Sutton', 'position':'WR', 'team':'Denver Broncos'},
+  {'id':'6', 'name':'Devaughn Vele', 'position':'WR', 'team':'Denver Broncos'},
+  {'id':'7', 'name':'Bub Means', 'position':'WR', 'team':'New Orleans Saints'},
+  {'id':'8', 'name':'Juwan Johnson', 'position':'TE', 'team':'New Orleans Saints'},
+  {'id':'9', 'name':'Blake Grupe', 'position':'K', 'team':'New Orleans Saints'},
+  {'id':'10', 'name':'Wil Lutz', 'position':'K', 'team':'Denver Broncos'},
+  {'id':'11', 'name':'Denver Broncos', 'position':'DST', 'team':'Denver Broncos'},
+  {'id':'12', 'name':'New Orleans Saints', 'position':'DST', 'team':'New Orleans Saints'},
+  {'id':'13', 'name':'Bo Nix', 'position':'QB', 'team':'Denver Broncos'},
+])
 
 // Add a player to the list
 function addPlayer() { // eslint-disable-line no-unused-vars
