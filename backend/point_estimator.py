@@ -18,16 +18,16 @@ FIELD_GOAL_MODIFIER = 3
 PAT_MODIFIER = 1
 
 def estimatePoints(player):
-    playerPoints = [player['name']]
+    playerPoints = {'name':player['name'], 'position':player['position']}
 
     if player['position'] == 'QB':
-        playerPoints.append(inferQbPoints(player))
+        playerPoints['points'] = inferQbPoints(player)
     elif player['position'] == 'RB' or player['position'] == 'WR' or player['position'] == 'TE':
-        playerPoints.append(inferRbWrTePoints(player))
+        playerPoints['points'] = inferRbWrTePoints(player)
     elif player['position'] == 'DST':
-        playerPoints.append(inferDstPoints(player))
+        playerPoints['points'] = inferDstPoints(player)
     elif player['position'] == 'K':
-        playerPoints.append(inferKPoints(player))
+        playerPoints['points'] = inferKPoints(player)
     else:
         print('Error: ' + player['name'] + ' is not a known player position.')
         return None

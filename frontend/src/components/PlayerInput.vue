@@ -56,6 +56,17 @@
         </ul>
         <button @click="analyzeRoster">Analyze Roster</button>
       </div>
+      <div class="frontpage">
+        <h2>Your Ideal Lineup</h2>
+        <div class="results">
+          <ul>
+            <li v-for="player in analyzedPlayers" :key="player">
+              {{ player.position }}: {{ player.name }}, Projected Points: {{ player.points }}
+            </li>
+          </ul>
+        </div>
+      <button @click="restart">Clear All Players & Lineup</button>
+    </div>
   </div>
 </template>
 
@@ -71,7 +82,7 @@ let id = 0
 const name = ref('')
 const position = ref('')
 const team = ref('')
-const players = ref([
+let players = ref([
   // Temporary testing data
   {'id':'0', 'name':'Spencer Rattler', 'position':'QB', 'team':'New Orleans Saints'},
   {'id':'1', 'name':'Javonte Williams', 'position':'RB', 'team':'Denver Broncos'},
@@ -89,6 +100,8 @@ const players = ref([
   {'id':'13', 'name':'Bo Nix', 'position':'QB', 'team':'Denver Broncos'},
 ])
 
+let analyzedPlayers = ref([])
+
 // Add a player to the list
 function addPlayer() { // eslint-disable-line no-unused-vars
   players.value.push({ id: id++, name: name.value, position: position.value, team: team.value })
@@ -100,6 +113,12 @@ function addPlayer() { // eslint-disable-line no-unused-vars
 // Remove a player from the list
 function removePlayer(player) { // eslint-disable-line no-unused-vars
   players.value = players.value.filter((t) => t !== player)
+}
+
+// Clears all data
+function restart() {
+  players.value = [];
+  analyzedPlayers.value = [];
 }
 
 // Pass roster information for analysis
@@ -114,7 +133,8 @@ function analyzeRoster() { // eslint-disable-line no-unused-vars
       }
     }
   ).then(response => {
-    console.log(response.data)
+    analyzedPlayers.value = response.data;
+    console.log(analyzedPlayers.value);
   }).catch(error => {
     console.log(error);
   });

@@ -1,21 +1,19 @@
 <template>
   <img alt="ULP logo" src="./assets/logo.png">
   <MainPage />
-  <PlayerInput v-if="true"/>
-  <AnalyzedRoster v-elseiif="true" />
+  <PlayerInput />
 </template>
 
 <script>
 import PlayerInput from './components/PlayerInput.vue'
 import MainPage from './components/MainPage.vue'
-import AnalyzedRoster from './components/AnalyzedRoster.vue'
+//import AnalyzedRoster from './components/AnalyzedRoster.vue'
 
 export default {
   name: 'App',
   components: {
     MainPage,
     PlayerInput,
-    AnalyzedRoster
   }
 }
 </script>

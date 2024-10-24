@@ -19,7 +19,7 @@ To set up your development environment for this project, follow these steps:
 3. To install frontend, navigate to frontend/ and enter `npm install -g @vue/cli`
 4. Acquire API keys and set them as an environment variable named `ODDS_API_KEY`
 
-## Project Steps
+## Initial Steps
 
 - [X] Create a frontend prototype that contains a basic splash page, detailing what the project is
 - [X] Add a prototype input to the front page that can intake n players and persist the data
@@ -30,22 +30,30 @@ To set up your development environment for this project, follow these steps:
 - [X] Improve algorithm to return ideal starting lineup based on predetermined team size and player amount
 - [X] Update frontend to send input players to the input of the Python script
 - [X] Find a way to inject precreated odds info to avoid using API requests
-- [ ] Update Python script to return ideal lineup to the frontend
-- [ ] Update frontend to display the ideal lineup on-screen
+- [X] Update Python script to return ideal lineup to the frontend
+- [X] Update frontend to display the ideal lineup on-screen
 
 ## Planned Improvements
 
-- [ ] Add a counter of remaining API calls to frontend
-- [X] Add a way to restrict odds for only the immediate next game being played
-- [ ] Use odds price to improve calculations on over/unders
-- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
+- [ ] Divide components into more modularized pieces
+- [ ] Only show "Your Ideal Lineup" component when calculation is complete
+- [ ] Improve formatting of entered players
+- [ ] Improve formatting of ideal lineup
+- [ ] Enhance UI to make interface prettier
+- [ ] Add a counter of remaining API calls to front end
+- [ ] Rewrite backend to where players are a class to simplify code
+- [ ] Improve backend code - add comments and simplify overly complex behavior
+- [ ] Fine-tune estimated fantasy points by including more data points (ie, estimated defensive turnovers, estimated fumbles, etc)
+- [ ] Add loading animation while backend calculates
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
-- [ ] Fine-tune estimated fantasy points by including more data points (ie, estimated defensive turnovers, estimated fumbles, etc)
-- [ ] Enhance UI to make interface prettier
-- [ ] Divide Vue components into more modularized pieces
-- [ ] Rewrite backend to where players are a class to simplify code
+- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
+
+## Completed Improvements
+
+- [X] Add a way to restrict odds for only the immediate next game being played
+- [X] Use odds price to improve calculations on over/unders
 
 ## Housekeeping
 
