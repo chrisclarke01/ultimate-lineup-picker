@@ -5,7 +5,7 @@ Ultimate Lineup Picker is a tool that uses Sportsbook player props to determine 
 ## Table of Contents
 
 - [Development Setup](#development-setup)
-- [Project Steps](#project-steps)
+- [Initial Steps](#initial-steps)
 - [Planned Improvements](#planned-improvements)
 - [Housekeeping](#housekeeping)
 - [Tools Used](#tools-used)
@@ -36,11 +36,12 @@ To set up your development environment for this project, follow these steps:
 ## Planned Improvements
 
 - [ ] Divide components into more modularized pieces
-- [ ] Only show "Your Ideal Lineup" component when calculation is complete
 - [ ] Improve formatting of entered players
 - [ ] Improve formatting of ideal lineup
 - [ ] Enhance UI to make interface prettier
 - [ ] Add a counter of remaining API calls to front end
+- [ ] Add error for backend to handle crashes/issues during processing
+- [ ] Add input requirements on frontend to guard against errors in backend
 - [ ] Rewrite backend to where players are a class to simplify code
 - [ ] Improve backend code - add comments and simplify overly complex behavior
 - [ ] Fine-tune estimated fantasy points by including more data points (ie, estimated defensive turnovers, estimated fumbles, etc)
@@ -49,11 +50,13 @@ To set up your development environment for this project, follow these steps:
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
 - [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
+- [ ] Rewrite front end with React, to learn React
 
 ## Completed Improvements
 
 - [X] Add a way to restrict odds for only the immediate next game being played
 - [X] Use odds price to improve calculations on over/unders
+- [X] Only show "Your Ideal Lineup" component when calculation is complete
 
 ## Housekeeping
 
