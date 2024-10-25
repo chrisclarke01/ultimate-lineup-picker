@@ -2,22 +2,41 @@
 
 Ultimate Lineup Picker is a tool that uses Sportsbook player props to determine the ideal fantasy football lineup. By analyzing how Vegas believes players will perform, ULP can infer fantasy points scored. When given a team of players, ULP will use these inferences to generate the ideal lineup for the upcoming week of play.
 
+ULP is primarily written via a combination of Python and Vue. Use of ULP requires a key for [The Odds API](https://the-odds-api.com/), which can be acquired at the link.
+
 ## Table of Contents
 
+- [Prerequisites](#prerequisites)
 - [Development Setup](#development-setup)
+- [Usage](#usage)
 - [Initial Steps](#initial-steps)
 - [Planned Improvements](#planned-improvements)
-- [Housekeeping](#housekeeping)
 - [Tools Used](#tools-used)
+
+## Prerequisites
+
+- Python is installed
+- Vue is installed
+- You have an API key for The Odds API
 
 ## Development Setup
 
 To set up your development environment for this project, follow these steps:
 
-1. Clone repository
-2. Ensure Python and Vue are installed
-3. To install frontend, navigate to frontend/ and enter `npm install -g @vue/cli`
-4. Acquire API keys and set them as an environment variable named `ODDS_API_KEY`
+1. Clone the repository
+2. Navigate to ```ultimate-lineup-picker/frontend/```
+3. Run ```npm install```
+4. Run ```npm run build```
+5. Create an environment variable on your machine ```ODDS_API_KEY``` equal to your The Odds API key
+
+## Usage
+
+1. Open two terminals
+2. In one terminal, cd to ```ultimate-lineup-picker/frontend/```
+3. In the other terminal, cd to ```ultimate-lineup-picker/backend/```
+4. In the frontend terminal, run the development page via ```npm run serve```
+5. In the backend terminal, run the development server via ```py main.py```
+6. In a web browser, navigate to ```https://localhost:3030/```
 
 ## Initial Steps
 
@@ -42,6 +61,7 @@ To set up your development environment for this project, follow these steps:
 - [ ] Add a counter of remaining API calls to front end
 - [ ] Add error for backend to handle crashes/issues during processing
 - [ ] Add input requirements on frontend to guard against errors in backend
+- [ ] Add input to frontend to signal to backend to use test JSON, or live data
 - [ ] Rewrite backend to where players are a class to simplify code
 - [ ] Improve backend code - add comments and simplify overly complex behavior
 - [ ] Fine-tune estimated fantasy points by including more data points (ie, estimated defensive turnovers, estimated fumbles, etc)
@@ -51,23 +71,14 @@ To set up your development environment for this project, follow these steps:
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
 - [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 - [ ] Rewrite front end with React, to learn React
-
-## Completed Improvements
-
 - [X] Add a way to restrict odds for only the immediate next game being played
 - [X] Use odds price to improve calculations on over/unders
 - [X] Only show "Your Ideal Lineup" component when calculation is complete
 
-## Housekeeping
-
-- Properly document APIs and used tools in Tools Used
-- Add a license
-- Improve Development Setup to outline all necessary steps
-- Add proper documentation
-- Modularize frontend and backend to be better organized and maintainable
-
 ## Tools Used
 
+- [The Odds API](https://the-odds-api.com/)
 - npm
+- pip
 - Python
 - Vue
