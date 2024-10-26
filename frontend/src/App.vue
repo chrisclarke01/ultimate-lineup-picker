@@ -1,11 +1,11 @@
 <template>
   <MainPage />
-  <FinishedProduct />
+  <LineupPicker />
 </template>
 
 <script setup>
   import MainPage from '@/components/MainPage.vue'
-  import FinishedProduct from '@/components/FinishedProduct.vue';
+  import LineupPicker from './components/LineupPicker.vue';
 </script>
 
 <style>
