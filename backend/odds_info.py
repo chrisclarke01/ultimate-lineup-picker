@@ -71,7 +71,7 @@ def isSoonestGame(gameTime):
     t0 = date(int(ymdTime[0]), int(ymdTime[1]), int(ymdTime[2]))
     t1 = date(int(currentTime[0]), int(currentTime[1]), int(currentTime[2]))
     delta = t0 - t1
-    return int(delta.days) <= 8
+    return int(delta.days) <= 6
         
 def hitApi(endpoint):
     try:
