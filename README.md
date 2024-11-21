@@ -11,6 +11,7 @@ ULP is primarily written via a combination of Python and Vue. Use of ULP require
 - [Usage](#usage)
 - [Initial Steps](#initial-steps)
 - [Planned Improvements](#planned-improvements)
+- [Completed Improvements](#completed-improvements)
 - [Tools Used](#tools-used)
 
 ## Prerequisites
@@ -54,23 +55,29 @@ To set up your development environment for this project, follow these steps:
 
 ## Planned Improvements
 
-- [ ] Divide components into more modularized pieces
-- [ ] Improve formatting of entered players
-- [ ] Improve formatting of ideal lineup
-- [ ] Enhance UI to make interface prettier
+- [ ] Add button to frontend to signal to backend to use test JSON, or live data
 - [ ] Add a counter of remaining API calls to front end
-- [ ] Add error for backend to handle crashes/issues during processing
-- [ ] Add input requirements on frontend to guard against errors in backend
-- [ ] Add input to frontend to signal to backend to use test JSON, or live data
+- [ ] Add error for backend to handle crashes/issues/missing API data during processing
+- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
+
+- [ ] Add loading animation while backend calculates
 - [ ] Rewrite backend to where players are a class to simplify code
 - [ ] Improve backend code - add comments and simplify overly complex behavior
 - [ ] Fine-tune estimated fantasy points by including more data points (ie, estimated defensive turnovers, estimated fumbles, etc)
-- [ ] Add loading animation while backend calculates
+
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
-- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
+
+- [ ] Improve formatting of entered players
+- [ ] Improve formatting of ideal lineup
+- [ ] Enhance UI to make interface prettier
+
+- [ ] Divide components into more modularized pieces
 - [ ] Rewrite front end with React, to learn React
+
+## Completed Improvements
+
 - [X] Add a way to restrict odds for only the immediate next game being played
 - [X] Use odds price to improve calculations on over/unders
 - [X] Only show "Your Ideal Lineup" component when calculation is complete
