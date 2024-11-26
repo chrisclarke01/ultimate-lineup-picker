@@ -4,6 +4,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
 @app.route('/api/players', methods=['GET', 'POST'])
 def players():
     content = request.json

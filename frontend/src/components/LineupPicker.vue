@@ -2,11 +2,15 @@
   <h2>
     Input Team Below
   </h2>
+  <label>
+    Use Test Data Instead of Live Data
+    <input type='checkbox' v-model='useTestData'>
+  </label>
 
   <!-- Input section. User inputs name, position, and team, and from this, a player object is created and binded. -->
-  <form id='playerInputForm' @submit.prevent="addPlayer()">
+  <form id='playerInputForm' @submit.prevent='addPlayer()'>
     <input required id='nameInput' v-model="name"  placeholder='Type Player Name' >
-    <select required id='positionInput' v-model="position" name='position'>
+    <select required id='positionInput' v-model='position' name='position'>
       <option value='QB'>QB</option>
       <option value='WR'>WR</option>
       <option value='RB'>RB</option>
@@ -14,7 +18,7 @@
       <option value='DST'>D/ST</option>
       <option value='K'>K</option>
     </select>
-    <select required id='teamInput' v-model="team" name='team'>
+    <select required id='teamInput' v-model='team' name='team'>
       <option value='Arizona Cardinals'>Arizona Cardinals</option>
       <option value='Atlanta Falcons'>Atlanta Falcons</option>
       <option value='Baltimore Ravens'>Baltimore Ravens</option>
@@ -53,12 +57,14 @@
 
   <!-- Display all the players by using an unordered list. Dynamically renders based on the amount of players entered. -->
   <ul>
-    <li v-for="player in players" :key="player.id">
+    <li v-for='player in players' :key='player.id'>
       {{ player.position }}: {{ player.name }}, {{ player.team }}
-      <button @click="removePlayer(player)">Remove Player</button>
+      <button @click='removePlayer(player)'>Remove Player</button>
     </li>
   </ul>
-  <button @click="analyzeRoster">Analyze Roster</button>
+  <button @click='analyzeRoster'>Analyze Roster</button>
+  <br/>
+  <button @click='restart'>Clear All Players & Lineup</button>
 
   <!-- Only show the ideal lineup of players if the server response has been received. -->
   <div v-if='analyzedPlayers.length !== 0'>
@@ -66,17 +72,19 @@
       Your Ideal Lineup
     </h2>
     <ul>
-      <li v-for="player in analyzedPlayers" :key="player.id">
+      <li v-for='player in analyzedPlayers' :key="player.id">
         {{ player.position }}: {{ player.name }}, Projected Points: {{ player.points }}
       </li>
     </ul>
-    <button @click="restart">Clear All Players & Lineup</button>
   </div>
 </template>
   
   
 <script setup>
   import { ref } from 'vue'
+
+  // Track whether test or live data is to be used
+  const useTestData = ref(false)
   
   // Give each player a unique ID, name, position, and team
   let id = 0
@@ -148,7 +156,8 @@
         'Content-Type':'application/json'
       },
       body: JSON.stringify({
-        players: players.value
+        usingTestData: useTestData.value,
+        players: players.value,
       })
     }
     
