@@ -11,9 +11,9 @@ def players():
     return main(content)
 
 def main(players):
-    odds = getOdds(players)
-    jsonify(odds)
-    return odds
+    response = getOdds(players)
+    jsonify(response)
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)

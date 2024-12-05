@@ -64,7 +64,10 @@ def getOdds(players):
                     props.append(outcome)
             player['props'][market['key']] = props
         estimatedPointsPerPlayer[player['position']].append(estimatePoints(player))
-    return createLineup(estimatedPointsPerPlayer)
+    return {
+        'player-data': createLineup(estimatedPointsPerPlayer),
+        'remaining-requests': getRemainingRequests(gameEventEndpoint)
+    }
 
 def isSoonestGame(gameTime):
     ymdTime = gameTime.split('T')[0].split('-')
@@ -78,8 +81,6 @@ def hitApi(endpoint):
     try:
         response = requests.get(endpoint)
         if response.status_code == 200:
-            print('Remaining Requests: ' + response.headers['x-requests-remaining'])
-            print('Used Requests: ', response.headers['x-requests-used'])
             return response.json()
     except requests.exceptions.RequestException as e:
         print('Error: ', e)
@@ -96,4 +97,13 @@ def getPropsEndpoint(playerPosition):
         return FIELD_GOALS + ',' + EXTRA_POINTS
     else:
         print('Error: ' + playerPosition + ' is not a known player position.')
+        return None
+    
+def getRemainingRequests(endpoint):
+    try:
+        response = requests.get(endpoint)
+        if response.status_code == 200:
+            return response.headers['x-requests-remaining']
+    except requests.exceptions.RequestException as e:
+        print('Error: ', e)
         return None

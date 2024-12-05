@@ -76,6 +76,9 @@
         {{ player.position }}: {{ player.name }}, Projected Points: {{ player.points }}
       </li>
     </ul>
+    <p>
+      Remaining API Requests: {{ remainingRequests }}
+    </p>
   </div>
 </template>
   
@@ -110,6 +113,7 @@
     {'id':'12', 'name':'New Orleans Saints', 'position':'DST', 'team':'New Orleans Saints'},
     {'id':'13', 'name':'Bo Nix', 'position':'QB', 'team':'Denver Broncos'},
   ])
+  let remainingRequests = ref([])
   let analyzedPlayers = ref([])
   
   // Add a player to the input list
@@ -168,10 +172,11 @@
       if (!response.ok) {
         throw new Error('Could not communicate with server.');
       }
-      return response.json()
+      return response.json();
     })
     .then(data => {
-      analyzedPlayers.value = data;
+      remainingRequests.value = data['remaining-requests'];
+      analyzedPlayers.value = data['player-data'];
     })
     .catch(error => {
       console.log('Fetch error: ', error);
