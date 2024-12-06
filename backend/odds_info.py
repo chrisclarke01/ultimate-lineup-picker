@@ -51,7 +51,11 @@ def getOdds(players):
         else:
             playerProps = json.load(open('testData.json'))
 
-        playerProps = playerProps['bookmakers'][0]['markets']
+        for bookmaker in playerProps['bookmakers']:
+            if bookmaker['markets']:
+                playerProps = bookmaker['markets']
+                break
+
         player['props'] = {}
 
         for market in playerProps:
