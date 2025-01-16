@@ -170,6 +170,10 @@
     await fetch(url, options)
     .then(response => {
       if (!response.ok) {
+        response.json()
+        .then(data => {
+          alert(data['message']);
+        });
         throw new Error('Could not communicate with server.');
       }
       return response.json();

@@ -8,7 +8,15 @@ CORS(app)
 @app.route('/api/players', methods=['GET', 'POST'])
 def players():
     content = request.json
-    return main(content)
+    try:
+        output = main(content)
+    except Exception as exception:
+        return {
+            'message': 'Bad input!',
+            'status': 400,
+            'Error': str(exception)
+            }, 400
+    return output
 
 def main(players):
     response = getOdds(players)
