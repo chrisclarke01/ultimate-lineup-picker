@@ -11,8 +11,13 @@ def players():
     try:
         output = main(content)
     except Exception as exception:
+        if hasattr(exception, 'message'):
+            message = exception.message
+        else:
+            message = 'New and unknown error: ' + getattr(exception, 'message', repr(exception))
+        print(message)
         return {
-            'message': 'Bad input!',
+            'message': message,
             'status': 400,
             'Error': str(exception)
             }, 400
