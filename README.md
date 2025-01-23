@@ -55,7 +55,6 @@ To set up your development environment for this project, follow these steps:
 
 ## Planned Improvements
 
-- [ ] Add error for backend to handle crashes/issues/missing API data during processing
 - [ ] Add loading animation while backend calculates
 - [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 
@@ -82,6 +81,7 @@ To set up your development environment for this project, follow these steps:
 - [X] Add button to frontend to signal to backend to use test JSON, or live data
 - [X] Add a counter of remaining API calls to front end
 - [X] Check all sports books until data is found, instead of only checking the first
+- [X] Add error for backend to handle crashes/issues/missing API data during processing
 
 ## Tools Used
 
