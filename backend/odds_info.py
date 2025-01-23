@@ -87,8 +87,7 @@ def hitApi(endpoint):
         if response.status_code == 200:
             return response.json()
     except requests.exceptions.RequestException as e:
-        print('Error: ', e)
-        return None
+        raise Exception('Could not hit API. URL: ' + endpoint + '. Exception: ' + getattr(e, 'message', repr(e)))
     
 def getPropsEndpoint(playerPosition):
     if playerPosition == 'QB':
@@ -100,8 +99,7 @@ def getPropsEndpoint(playerPosition):
     elif playerPosition == 'K':
         return FIELD_GOALS + ',' + EXTRA_POINTS
     else:
-        print('Error: ' + playerPosition + ' is not a known player position.')
-        return None
+        raise Exception('Error: ' + playerPosition + ' is not a known player position.')
     
 def getRemainingRequests(endpoint):
     try:
@@ -109,5 +107,4 @@ def getRemainingRequests(endpoint):
         if response.status_code == 200:
             return response.headers['x-requests-remaining']
     except requests.exceptions.RequestException as e:
-        print('Error: ', e)
-        return None
+        raise Exception('Could not hit API. URL: ' + endpoint + '. Exception: ' + getattr(e, 'message', repr(e)))
