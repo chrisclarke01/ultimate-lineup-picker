@@ -2,6 +2,8 @@ from odds_info import getOdds
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
+import traceback
+
 app = Flask(__name__)
 CORS(app)
 
@@ -11,11 +13,8 @@ def players():
     try:
         output = main(content)
     except Exception as exception:
-        if hasattr(exception, 'message'):
-            message = exception.message
-        else:
-            message = 'New and unknown error: ' + getattr(exception, 'message', repr(exception))
-        print(message)
+        print(traceback.format_exc())
+        message = str(exception)
         return {
             'message': message,
             'status': 400,

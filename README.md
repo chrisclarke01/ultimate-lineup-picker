@@ -56,9 +56,9 @@ To set up your development environment for this project, follow these steps:
 ## Planned Improvements
 
 - [ ] Add error for backend to handle crashes/issues/missing API data during processing
+- [ ] Add loading animation while backend calculates
 - [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 
-- [ ] Add loading animation while backend calculates
 - [ ] Rewrite backend to where players are a class to simplify code
 - [ ] Improve backend code - add comments and simplify overly complex behavior
 - [ ] Fine-tune estimated fantasy points by including more data points (ie, estimated defensive turnovers, estimated fumbles, etc)

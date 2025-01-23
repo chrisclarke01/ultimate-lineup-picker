@@ -86,6 +86,15 @@
 <script setup>
   import { ref } from 'vue'
 
+  // Minimum required amounts of every position
+  const minQbNum = 1;
+  const minRbNum = 2;
+  const minWrNum = 2;
+  const minTeNum = 1;
+  const minFlexNum = 1;
+  const minDstNum = 1;
+  const minKNum = 1;
+
   // Track whether test or live data is to be used
   const useTestData = ref(false)
   
@@ -99,6 +108,7 @@
   let players = ref([
     // Temporary testing data
     {'id':'0', 'name':'Spencer Rattler', 'position':'QB', 'team':'New Orleans Saints'},
+    {'id':'13', 'name':'Bo Nix', 'position':'QB', 'team':'Denver Broncos'},
     {'id':'1', 'name':'Javonte Williams', 'position':'RB', 'team':'Denver Broncos'},
     {'id':'2', 'name':'Jaleel Mclaughlin', 'position':'RB', 'team':'Denver Broncos'},
     {'id':'3', 'name':'Alvin Kamara', 'position':'RB', 'team':'New Orleans Saints'},
@@ -107,11 +117,10 @@
     {'id':'6', 'name':'Devaughn Vele', 'position':'WR', 'team':'Denver Broncos'},
     {'id':'7', 'name':'Bub Means', 'position':'WR', 'team':'New Orleans Saints'},
     {'id':'8', 'name':'Juwan Johnson', 'position':'TE', 'team':'New Orleans Saints'},
-    {'id':'9', 'name':'Blake Grupe', 'position':'K', 'team':'New Orleans Saints'},
-    {'id':'10', 'name':'Wil Lutz', 'position':'K', 'team':'Denver Broncos'},
     {'id':'11', 'name':'Denver Broncos', 'position':'DST', 'team':'Denver Broncos'},
     {'id':'12', 'name':'New Orleans Saints', 'position':'DST', 'team':'New Orleans Saints'},
-    {'id':'13', 'name':'Bo Nix', 'position':'QB', 'team':'Denver Broncos'},
+    {'id':'9', 'name':'Blake Grupe', 'position':'K', 'team':'New Orleans Saints'},
+    {'id':'10', 'name':'Wil Lutz', 'position':'K', 'team':'Denver Broncos'},
   ])
   let remainingRequests = ref([])
   let analyzedPlayers = ref([])
@@ -149,42 +158,101 @@
    * stored in analyzedPlayers.
    */
   const analyzeRoster = async () => {
-    // URL of the backend
-    const url = 'http://localhost:5000/api/players';
+    // Ensure data is valid and the correct amount of players have been input.
+    let qbNum = 0;
+    let rbNum = 0;
+    let wrNum = 0;
+    let teNum = 0;
+    let flexNum = 0;
+    let dstNum = 0;
+    let kNum = 0;
 
-    // Format to send the message.
-    const options = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type':'application/json'
-      },
-      body: JSON.stringify({
-        usingTestData: useTestData.value,
-        players: players.value,
-      })
+    for (const player of players.value) {
+      let position = player['position'];
+      if (position == 'QB') {
+        qbNum++;
+      } else if (position == 'RB') {
+        if (rbNum == minRbNum) {
+          flexNum++;
+        } else {
+          rbNum++;
+        }
+      } else if (position == 'WR') {
+        if (wrNum == minWrNum) {
+          flexNum++;
+        } else {
+          wrNum++;
+        }
+      } else if (position == 'TE') {
+        if (teNum == minTeNum) {
+          flexNum++;
+        } else {
+          teNum++;
+        }
+      } else if (position == 'DST') {
+        dstNum++;
+      } else if (position == 'K') {
+        kNum++;
+      }
+    }
+
+    let missingPlayers = [];
+    if (qbNum < minQbNum) {
+      missingPlayers.push(minQbNum - qbNum + ' QB');
+    } if (rbNum < minRbNum) {
+      missingPlayers.push(minRbNum - rbNum + ' RB');
+    } if (wrNum < minWrNum) {
+      missingPlayers.push(minWrNum - wrNum + ' WR');
+    } if (teNum < minTeNum) {
+      missingPlayers.push(minTeNum - teNum + ' TE');
+    } if (flexNum < minFlexNum) {
+      missingPlayers.push(minFlexNum - flexNum + ' extra Flex');
+    } if (dstNum < minDstNum) {
+      missingPlayers.push(minDstNum - dstNum + ' D/ST');
+    } if (kNum < minKNum) {
+      missingPlayers.push(minKNum - kNum + ' K');
     }
     
-    // Hit backend, and receive response.
-    // Store response in analyzedPlayers.
-    await fetch(url, options)
-    .then(response => {
-      if (!response.ok) {
-        response.json()
-        .then(data => {
-          alert(data['message']);
-        });
-        throw new Error('Could not communicate with server.');
+    if (missingPlayers.length > 0) {
+      alert('Need more players: \n' + missingPlayers.join('\n'))
+    } else {
+      // URL of the backend
+      const url = 'http://localhost:5000/api/players';
+
+      // Format to send the message.
+      const options = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify({
+          usingTestData: useTestData.value,
+          players: players.value,
+        })
       }
-      return response.json();
-    })
-    .then(data => {
-      remainingRequests.value = data['remaining-requests'];
-      analyzedPlayers.value = data['player-data'];
-    })
-    .catch(error => {
-      console.log('Fetch error: ', error);
-    });
+      
+      // Hit backend, and receive response.
+      // Store response in analyzedPlayers.
+      await fetch(url, options)
+      .then(response => {
+        if (!response.ok) {
+          response.json()
+          .then(data => {
+            alert(data['message']);
+          });
+          throw new Error('Could not communicate with server.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        remainingRequests.value = data['remaining-requests'];
+        analyzedPlayers.value = data['player-data'];
+      })
+      .catch(error => {
+        console.log('Fetch error: ', error);
+      });
+    }
   }
 </script>
   
