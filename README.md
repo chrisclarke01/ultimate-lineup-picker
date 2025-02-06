@@ -55,16 +55,15 @@ To set up your development environment for this project, follow these steps:
 
 ## Planned Improvements
 
-- [ ] Add loading animation while backend calculates
+- [ ] Allow users to pick PPR, half-PPR, and Standard scoring
+- [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
+- [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
+
 - [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 
 - [ ] Rewrite backend to where players are a class to simplify code
 - [ ] Improve backend code - add comments and simplify overly complex behavior
 - [ ] Fine-tune estimated fantasy points by including more data points (ie, estimated defensive turnovers, estimated fumbles, etc)
-
-- [ ] Allow users to pick PPR, half-PPR, and Standard scoring
-- [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
-- [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
 
 - [ ] Improve formatting of entered players
 - [ ] Improve formatting of ideal lineup
@@ -75,6 +74,7 @@ To set up your development environment for this project, follow these steps:
 
 ## Completed Improvements
 
+- [X] Add loading animation while backend calculates
 - [X] Add a way to restrict odds for only the immediate next game being played
 - [X] Use odds price to improve calculations on over/unders
 - [X] Only show "Your Ideal Lineup" component when calculation is complete

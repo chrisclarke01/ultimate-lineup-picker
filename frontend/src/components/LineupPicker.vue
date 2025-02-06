@@ -66,6 +66,10 @@
   <br/>
   <button @click='restart'>Clear All Players & Lineup</button>
 
+  <div v-if='loading'>
+    <img alt="Loading..." :src="loadAnimation" class="spinLoadingImage">
+  </div>
+
   <!-- Only show the ideal lineup of players if the server response has been received. -->
   <div v-if='analyzedPlayers.length !== 0'>
     <h2>
@@ -82,9 +86,12 @@
   </div>
 </template>
   
-  
 <script setup>
   import { ref } from 'vue'
+
+  // Flag to display a loading animation during backend calculation
+  import loadAnimation from '@/assets/loading.png';
+  const loading = ref(false);
 
   // Minimum required amounts of every position
   const minQbNum = 1;
@@ -153,11 +160,21 @@
   }
   
   /**
+   * Wrapper method to call performRosterAnalysis
+   * while also allowing loading animation
+   */
+  async function analyzeRoster() {
+    loading.value = true;
+    await performRosterAnalysis();
+    loading.value = false;
+  }
+
+  /**
    * Queries the backend by sending players as a JSON to
    * the backend, and receiving the response as a JSON
    * stored in analyzedPlayers.
    */
-  const analyzeRoster = async () => {
+  const performRosterAnalysis = async () => {
     // Ensure data is valid and the correct amount of players have been input.
     let qbNum = 0;
     let rbNum = 0;
@@ -261,12 +278,12 @@
     list-style-type: none;
   }
 
-  #nameInput {
+  .nameInput {
     border-radius: 2px;
     margin-left: 20px;
   }
 
-  #positionInput {
+  .positionInput {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -279,7 +296,7 @@
     margin-left: 20px;
   }
 
-  #teamInput {
+  .teamInput {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -292,9 +309,34 @@
     margin-left: 20px;
   }
 
-  #playerInputForm {
+  .playerInputForm {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .spinLoadingImage {
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    -webkit-animation:spin 2s linear infinite;
+    -moz-animation:spin 2s linear infinite;
+    animation:spin 2s linear infinite;
+  }
+
+  @-moz-keyframes spin { 
+    100% { -moz-transform: rotate(360deg); } 
+  }
+
+  @-webkit-keyframes spin { 
+    100% { -webkit-transform: rotate(360deg); } 
+  }
+
+  @keyframes spin { 
+    100% { 
+      -webkit-transform: rotate(360deg); 
+      transform:rotate(360deg); 
+    } 
   }
 </style>
