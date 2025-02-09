@@ -13,3 +13,10 @@
 <script setup>
   import logo from '@/assets/logo.png'
 </script>
+
+<style scoped>
+  img {
+    width: 150px;
+    height: 150px;
+  }
+</style>

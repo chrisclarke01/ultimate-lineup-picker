@@ -54,12 +54,11 @@ To set up your development environment for this project, follow these steps:
 - [X] Update frontend to display the ideal lineup on-screen
 
 ## Planned Improvements
+- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player (https://gist.github.com/nntrn/ee26cb2a0716de0947a0a4e9a157bc1c/2fa98612cedcbad033d4206b16cd360c9b654ae9)
 
+- [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
-- [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
-
-- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 
 - [ ] Rewrite backend to where players are a class to simplify code
 - [ ] Improve backend code - add comments and simplify overly complex behavior

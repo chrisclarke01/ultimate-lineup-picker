@@ -1,11 +1,18 @@
 <template>
+  <h2 @click='settingsChosen = !settingsChosen;' id='settingsButton'>
+    Settings
+  </h2>
+  <div class='settings' v-if='settingsChosen'>
+    <hr/>
+    <label>
+      Use Test Data Instead of Live Data
+      <input type='checkbox' v-model='useTestData'>
+    </label>
+    <hr />
+  </div>
   <h2>
     Input Team Below
   </h2>
-  <label>
-    Use Test Data Instead of Live Data
-    <input type='checkbox' v-model='useTestData'>
-  </label>
 
   <!-- Input section. User inputs name, position, and team, and from this, a player object is created and binded. -->
   <form id='playerInputForm' @submit.prevent='addPlayer()'>
@@ -86,6 +93,9 @@
   
 <script setup>
   import { ref } from 'vue'
+
+  // Flag to display the settings
+  const settingsChosen = ref(false);
 
   // Flag to display a loading animation during backend calculation
   const loading = ref(false);
@@ -276,6 +286,15 @@
 <style scoped>
   ul {
     list-style-type: none;
+  }
+
+  hr {
+    width:33%;
+  }
+
+  #settingsButton {
+    cursor: pointer;
+    color: royalblue;
   }
 
   .nameInput {
