@@ -66,9 +66,7 @@
   <br/>
   <button @click='restart'>Clear All Players & Lineup</button>
 
-  <div v-if='loading'>
-    <img alt="Loading..." :src="loadAnimation" class="spinLoadingImage">
-  </div>
+  <div v-if='loading' class="spinner" />
 
   <!-- Only show the ideal lineup of players if the server response has been received. -->
   <div v-if='analyzedPlayers.length !== 0'>
@@ -90,7 +88,6 @@
   import { ref } from 'vue'
 
   // Flag to display a loading animation during backend calculation
-  import loadAnimation from '@/assets/loading.png';
   const loading = ref(false);
 
   // Minimum required amounts of every position
@@ -175,6 +172,9 @@
    * stored in analyzedPlayers.
    */
   const performRosterAnalysis = async () => {
+    // Clear existing Analyzed Players, starting fresh
+    analyzedPlayers.value = [];
+
     // Ensure data is valid and the correct amount of players have been input.
     let qbNum = 0;
     let rbNum = 0;
@@ -315,28 +315,19 @@
     justify-content: center;
   }
 
-  .spinLoadingImage {
-    top: 50%;
-    left: 50%;
+  .spinner {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    margin: auto;
+    margin-top: 20px;
+    border-radius: 50%;
     width: 120px;
     height: 120px;
-    -webkit-animation:spin 2s linear infinite;
-    -moz-animation:spin 2s linear infinite;
-    animation:spin 2s linear infinite;
+    animation: spin 2s linear infinite;
   }
 
-  @-moz-keyframes spin { 
-    100% { -moz-transform: rotate(360deg); } 
-  }
-
-  @-webkit-keyframes spin { 
-    100% { -webkit-transform: rotate(360deg); } 
-  }
-
-  @keyframes spin { 
-    100% { 
-      -webkit-transform: rotate(360deg); 
-      transform:rotate(360deg); 
-    } 
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 </style>
