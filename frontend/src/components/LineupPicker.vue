@@ -14,52 +14,12 @@
     Input Team Below
   </h2>
 
-  <!-- Input section. User inputs name, position, and team, and from this, a player object is created and binded. -->
-  <form id='playerInputForm' @submit.prevent='addPlayer()'>
-    <input required id='nameInput' v-model="name"  placeholder='Type Player Name' >
-    <select required id='positionInput' v-model='position' name='position'>
-      <option value='QB'>QB</option>
-      <option value='WR'>WR</option>
-      <option value='RB'>RB</option>
-      <option value='TE'>TE</option>
-      <option value='DST'>D/ST</option>
-      <option value='K'>K</option>
-    </select>
-    <select required id='teamInput' v-model='team' name='team'>
-      <option value='Arizona Cardinals'>Arizona Cardinals</option>
-      <option value='Atlanta Falcons'>Atlanta Falcons</option>
-      <option value='Baltimore Ravens'>Baltimore Ravens</option>
-      <option value='Buffalo Bills'>Buffalo Bills</option>
-      <option value='Carolina Panthers'>Carolina Panthers</option>
-      <option value='Chicago Bears'>Chicago Bears</option>
-      <option value='Cincinnati Bengals'>Cincinnati Bengals</option>
-      <option value='Cleveland Browns'>Cleveland Browns</option>
-      <option value='Dallas Cowboys'>Dallas Cowboys</option>
-      <option value='Denver Broncos'>Denver Broncos</option>
-      <option value='Detroit Lions'>Detroit Lions</option>
-      <option value='Green Bay Packers'>Green Bay Packers</option>
-      <option value='Houston Texans'>Houston Texans</option>
-      <option value='Indianapolis Colts'>Indianapolis Colts</option>
-      <option value='Jacksonville Jaguars'>Jacksonville Jaguars</option>
-      <option value='Kansas City Chiefs'>Kansas City Chiefs</option>
-      <option value='Las Vegas Raiders'>Las Vegas Raiders</option>
-      <option value='Los Angeles Chargers'>Los Angeles Chargers</option>
-      <option value='Los Angeles Rams'>Los Angeles Rams</option>
-      <option value='Miami Dolphins'>Miami Dolphins</option>
-      <option value='Minnesota Vikings'>Minnesota Vikings</option>
-      <option value='New England Patriots'>New England Patriots</option>
-      <option value='New Orleans Saints'>New Orleans Saints</option>
-      <option value='New York Giants'>New York Giants</option>
-      <option value='New York Jets'>New York Jets</option>
-      <option value='Philadelphia Eagles'>Philadelphia Eagles</option>
-      <option value='Pittsburgh Steelers'>Pittsburgh Steelers</option>
-      <option value='San Francisco 49ers'>San Francisco 49ers</option>
-      <option value='Seattle Seahawks'>Seattle Seahawks</option>
-      <option value='Tampa Bay Buccaneers'>Tampa Bay Buccaneers</option>
-      <option value='Tennessee Titans'>Tennessee Titans</option>
-      <option value='Washington Commanders'>Washington Commanders</option>
-    </select>
-    <button>Submit Player to Roster</button>
+  <!-- Input section -->
+  <form id='playerInput' @submit.prevent='addPlayer()'>
+    <input required id='nameInput' v-model='name' @input='generateCards(name)' placeholder='Type Player Name' >
+    <ul id='playerOptions' v-for='player in playerOptions' :key='player.name'>
+      <PlayerCard :name='player.name' :position='player.position' :team='player.team' @click='addPlayer(player)' />
+    </ul>
   </form>
 
   <!-- Display all the players by using an unordered list. Dynamically renders based on the amount of players entered. -->
@@ -93,6 +53,8 @@
   
 <script setup>
   import { ref } from 'vue'
+  import playerJson from '../assets/players.json';
+  import PlayerCard from './PlayerCard.vue';
 
   // Flag to display the settings
   const settingsChosen = ref(false);
@@ -110,13 +72,13 @@
   const minKNum = 1;
 
   // Track whether test or live data is to be used
-  const useTestData = ref(false)
+  const useTestData = ref(false);
   
   // Give each player a unique ID, name, position, and team
-  let id = 0
-  const name = ref('')
-  const position = ref('')
-  const team = ref('')
+  let id = 0;
+  const name = ref('');
+  const position = ref('');
+  const team = ref('');
 
   // Store the input list of players and the output received from server.
   let players = ref([
@@ -135,21 +97,48 @@
     {'id':'12', 'name':'New Orleans Saints', 'position':'DST', 'team':'New Orleans Saints'},
     {'id':'9', 'name':'Blake Grupe', 'position':'K', 'team':'New Orleans Saints'},
     {'id':'10', 'name':'Wil Lutz', 'position':'K', 'team':'Denver Broncos'},
-  ])
-  let remainingRequests = ref([])
-  let analyzedPlayers = ref([])
+  ]);
+  let remainingRequests = ref([]);
+  let analyzedPlayers = ref([]);
+
+  // List of up to 5 potential players to display
+  let playerOptions = ref([]);
   
   // Add a player to the input list
-  function addPlayer() {
-    players.value.push({
-      id: id++,
-      name: name.value,
-      position: position.value,
-      team: team.value
-    });
+  function addPlayer(player) {
+    if (players.value.some(e => e.name === player.name)) {
+      // Do nothing - don't want to add duplicate players
+    } else {
+        players.value.push({
+        id: id++,
+        name: player.name,
+        position: player.position,
+        team: player.team
+      });
+    }
+
     name.value = '';
     position.value = '';
     team.value = '';
+    playerOptions = ref([]);
+  }
+
+  // Generate player cards based on substring of typed name
+  function generateCards(name) {
+    playerOptions = ref([]);
+    if (name.length > 2) {
+      for (const key in playerJson) {
+        const curr = playerJson[key];
+        const currName = curr['PlayerName'].split('.').join('').substring(0, name.length);
+        if (currName.toUpperCase() === name.toUpperCase() && playerOptions.value.length <= 5) {
+          playerOptions.value.push({
+            name: curr['PlayerName'],
+            position: curr['Pos'],
+            team: curr['Team']
+          });
+        }
+      }
+    }
   }
   
   // Remove a player from the input list
@@ -289,7 +278,7 @@
   }
 
   hr {
-    width:33%;
+    width: 33%;
   }
 
   #settingsButton {
@@ -297,41 +286,24 @@
     color: royalblue;
   }
 
-  .nameInput {
+  #playerInput{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  #nameInput {
     border-radius: 2px;
     margin-left: 20px;
-  }
-
-  .positionInput {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 4%;
-    padding: 14px 16px;
-    border: none;
-    border-radius: 4px;
-    background-color: #f1f1f1;
+    width: 300px;
     font-size: medium;
-    margin-left: 20px;
+    margin-bottom: 3px;
   }
 
-  .teamInput {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20%;
-    padding: 14px 16px;
-    border: none;
-    border-radius: 4px;
-    background-color: #f1f1f1;
-    font-size: medium;
-    margin-left: 20px;
-  }
-
-  .playerInputForm {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  #playerOptions {
+    cursor: pointer;
+    margin: 0px;
   }
 
   .spinner {
