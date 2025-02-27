@@ -73,7 +73,6 @@ To set up your development environment for this project, follow these steps:
 
 ## Completed Improvements
 
-- [X] Allow users to adjust player amount (ie, 2 QB, 1 WR, etc)
 - [X] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 - [X] Add loading animation while backend calculates
 - [X] Add a way to restrict odds for only the immediate next game being played
