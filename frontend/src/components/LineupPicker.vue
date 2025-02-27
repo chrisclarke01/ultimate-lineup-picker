@@ -7,6 +7,41 @@
     <label>
       Use Test Data Instead of Live Data
       <input type='checkbox' v-model='useTestData'>
+      
+      <br />
+      QB Amount<input type='radio' value='1' name='qb' v-model='minQbNum'>1
+      <input checked type='radio' value='2' name='qb' v-model='minQbNum'>2
+      <input type='radio' value='3' name='qb' v-model='minQbNum'>3
+      
+      <br />
+      RB Amount<input type='radio' value='1' name='rb' v-model='minRbNum'>1
+      <input checked type='radio' value='2' name='rb' v-model='minRbNum'>2
+      <input type='radio' value='3' name='rb' v-model='minRbNum'>3
+      
+      <br />
+      WR Amount<input type='radio' value='1' name='wr' v-model='minWrNum'>1
+      <input checked type='radio' value='2' name='wr' v-model='minWrNum'>2
+      <input type='radio' value='3' name='wr' v-model='minWrNum'>3
+      
+      <br />
+      TE Amount<input type='radio' value='1' name='te' v-model='minTeNum'>1
+      <input checked type='radio' value='2' name='te' v-model='minTeNum'>2
+      <input type='radio' value='3' name='te' v-model='minTeNum'>3
+
+      <br />
+      FLEX Amount<input type='radio' value='1' name='flex' v-model='minFlexNum'>1
+      <input checked type='radio' value='2' name='flex' v-model='minFlexNum'>2
+      <input type='radio' value='3' name='flex' v-model='minFlexNum'>3
+
+      <br />
+      DST Amount<input type='radio' value='1' name='dst' v-model='minDstNum'>1
+      <input checked type='radio' value='2' name='dst' v-model='minDstNum'>2
+      <input type='radio' value='3' name='dst' v-model='minDstNum'>3
+      
+      <br />
+      K Amount<input type='radio' value='1' name='k' v-model='minKNum'>1
+      <input checked type='radio' value='2' name='k' v-model='minKNum'>2
+      <input type='radio' value='3' name='k' v-model='minKNum'>3
     </label>
     <hr />
   </div>
@@ -63,13 +98,13 @@
   const loading = ref(false);
 
   // Minimum required amounts of every position
-  const minQbNum = 1;
-  const minRbNum = 2;
-  const minWrNum = 2;
-  const minTeNum = 1;
-  const minFlexNum = 1;
-  const minDstNum = 1;
-  const minKNum = 1;
+  const minQbNum = ref(2);
+  const minRbNum = ref(2);
+  const minWrNum = ref(2);
+  const minTeNum = ref(1);
+  const minFlexNum = ref(1);
+  const minDstNum = ref(1);
+  const minKNum = ref(1);
 
   // Track whether test or live data is to be used
   const useTestData = ref(false);
@@ -129,7 +164,7 @@
     if (name.length > 2) {
       for (const key in playerJson) {
         const curr = playerJson[key];
-        const currName = curr['PlayerName'].split('.').join('').substring(0, name.length);
+        const currName = curr['PlayerName'].split('.').join('').split('\'').join('').substring(0, name.length);
         if (currName.toUpperCase() === name.toUpperCase() && playerOptions.value.length <= 5) {
           playerOptions.value.push({
             name: curr['PlayerName'],
@@ -188,19 +223,19 @@
       if (position == 'QB') {
         qbNum++;
       } else if (position == 'RB') {
-        if (rbNum == minRbNum) {
+        if (rbNum == minRbNum.value) {
           flexNum++;
         } else {
           rbNum++;
         }
       } else if (position == 'WR') {
-        if (wrNum == minWrNum) {
+        if (wrNum == minWrNum.value) {
           flexNum++;
         } else {
           wrNum++;
         }
       } else if (position == 'TE') {
-        if (teNum == minTeNum) {
+        if (teNum == minTeNum.value) {
           flexNum++;
         } else {
           teNum++;
@@ -213,20 +248,20 @@
     }
 
     let missingPlayers = [];
-    if (qbNum < minQbNum) {
-      missingPlayers.push(minQbNum - qbNum + ' QB');
-    } if (rbNum < minRbNum) {
-      missingPlayers.push(minRbNum - rbNum + ' RB');
-    } if (wrNum < minWrNum) {
-      missingPlayers.push(minWrNum - wrNum + ' WR');
-    } if (teNum < minTeNum) {
-      missingPlayers.push(minTeNum - teNum + ' TE');
-    } if (flexNum < minFlexNum) {
-      missingPlayers.push(minFlexNum - flexNum + ' extra Flex');
-    } if (dstNum < minDstNum) {
-      missingPlayers.push(minDstNum - dstNum + ' D/ST');
-    } if (kNum < minKNum) {
-      missingPlayers.push(minKNum - kNum + ' K');
+    if (qbNum < minQbNum.value) {
+      missingPlayers.push(minQbNum.value - qbNum + ' QB');
+    } if (rbNum < minRbNum.value) {
+      missingPlayers.push(minRbNum.value - rbNum + ' RB');
+    } if (wrNum < minWrNum.value) {
+      missingPlayers.push(minWrNum.value - wrNum + ' WR');
+    } if (teNum < minTeNum.value) {
+      missingPlayers.push(minTeNum.value - teNum + ' TE');
+    } if (flexNum < minFlexNum.value) {
+      missingPlayers.push(minFlexNum.value - flexNum + ' extra Flex');
+    } if (dstNum < minDstNum.value) {
+      missingPlayers.push(minDstNum.value - dstNum + ' D/ST');
+    } if (kNum < minKNum.value) {
+      missingPlayers.push(minKNum.value - kNum + ' K');
     }
     
     if (missingPlayers.length > 0) {

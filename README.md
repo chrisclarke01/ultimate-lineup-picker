@@ -55,9 +55,8 @@ To set up your development environment for this project, follow these steps:
 
 ## Planned Improvements
 
-- [ ] Add ability to automatically check the position, team, and upcoming opponent of each entered player
-
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
+- [ ] Add ability to Super Flex (use QB as)
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
 
@@ -74,6 +73,8 @@ To set up your development environment for this project, follow these steps:
 
 ## Completed Improvements
 
+- [X] Allow users to adjust player amount (ie, 2 QB, 1 WR, etc)
+- [X] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 - [X] Add loading animation while backend calculates
 - [X] Add a way to restrict odds for only the immediate next game being played
 - [X] Use odds price to improve calculations on over/unders
@@ -86,7 +87,9 @@ To set up your development environment for this project, follow these steps:
 ## Tools Used
 
 - [The Odds API](https://the-odds-api.com/)
+- [NFL-Data](https://github.com/hvpkod/NFL-Data/tree/main)
 - npm
 - pip
 - Python
 - Vue
+- Flask
