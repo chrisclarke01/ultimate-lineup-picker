@@ -43,10 +43,16 @@ def getOdds(players):
         gameEventEndpoint = url + 'v4/sports/americanfootball_nfl/events?apiKey=' + apiKey
         games = hitApi(gameEventEndpoint)
 
+        # Check every game being played to see if the given player is playing that week
         for game in games:
             if usingTestData or (game['home_team'] == player['team'] or game['away_team'] == player['team']) and isSoonestGame(game['commence_time']):
                 player['game_id'] = game['id']
-            else:
+        
+        # If the player is not playing that week, add them to InvalidPlayers list and throw error before hitting API endpoints     
+        try:
+            if player['game_id'] is None:
+                pass # Simply pass - the above if statement is checking if the player is playing that week
+        except NameError:
                 invalidPlayers.add(player['position'] + ': ' + player['name'])
                 invalidPlayer = True
 
@@ -76,7 +82,7 @@ def getOdds(players):
                 player['props'][market['key']] = props
             estimatedPointsPerPlayer[player['position']].append(estimatePoints(player))
     
-    if invalidPlayers:
+    if invalidPlayer:
         raise Exception('Could not find data on the following players. They are likely not playing or have no props:\n' + '\n'.join(invalidPlayers))
     return {
         'player-data': createLineup(estimatedPointsPerPlayer),

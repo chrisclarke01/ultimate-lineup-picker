@@ -37,7 +37,7 @@ To set up your development environment for this project, follow these steps:
 3. In the other terminal, cd to ```ultimate-lineup-picker/backend/```
 4. In the frontend terminal, run the development page via ```npm run serve```
 5. In the backend terminal, run the development server via ```py main.py```
-6. In a web browser, navigate to ```https://localhost:3030/```
+6. In a web browser, navigate to ```https://localhost:8080/```
 
 ## Initial Steps
 
