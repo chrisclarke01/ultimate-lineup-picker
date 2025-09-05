@@ -90,6 +90,7 @@
   
 <script setup>
   import { ref } from 'vue'
+  import DefenseRoster from '../assets/defenses.json'
   import PlayerCard from './PlayerCard.vue';
 
   // Player data API Key
@@ -169,9 +170,11 @@
     if (name.length > 2) {
       for (const key in playerData) {
         const curr = playerData[key];
-        if (curr['Status'] === 'Active' && (curr['FantasyPosition'] === 'QB' || curr['FantasyPosition'] === 'WR' || curr['FantasyPosition'] === 'RB' || curr['FantasyPosition'] === 'TE' || curr['FantasyPosition'] === 'K')) {
-          const currName = curr['Name'].split('.').join('').split('\'').join('').substring(0, name.length);
-          if (currName.toUpperCase() === name.toUpperCase() && playerOptions.value.length <= 5) {
+        if (curr['Status'] === 'Active' && (curr['FantasyPosition'] === 'QB' || curr['FantasyPosition'] === 'WR' || curr['FantasyPosition'] === 'RB' || curr['FantasyPosition'] === 'TE' || curr['FantasyPosition'] === 'DST' || curr['FantasyPosition'] === 'K')) {
+          const fullName = curr['Name'].split('.').join('').split('\'').join('').substring(0, name.length);
+          const firstName = curr['FirstName'].split('.').join('').split('\'').join('').substring(0, name.length);
+          const lastName = curr['LastName'].split('.').join('').split('\'').join('').substring(0, name.length);
+          if ((fullName.toUpperCase() === name.toUpperCase() || firstName.toUpperCase() === name.toUpperCase() || lastName.toUpperCase() === name.toUpperCase()) && playerOptions.value.length <= 5) {
             playerOptions.value.push({
               name: curr['Name'],
               position: curr['FantasyPosition'],
@@ -189,6 +192,9 @@
    */
   async function loadPlayerData() {
     if (playerData == null) {
+      // Create variable to house only players
+      let roster = null;
+
       // URL of the SportsDataIO API
       const url = 'https://api.sportsdata.io/v3/nfl/scores/json/Players?key=' + PLAYER_DATA_API_KEY;
 
@@ -215,13 +221,14 @@
         return response.json();
       })
       .then(data => {
-        console.log(data);
-        playerData = data;
+        roster = data;
       })
       .catch(error => {
         console.log('Fetch error: ', error);
       });
 
+      // Combine team defenses with actual players
+      playerData = [ ...DefenseRoster, ...roster ];
 
     }
   }

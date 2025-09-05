@@ -45,7 +45,8 @@ def getOdds(players):
 
         # Check every game being played to see if the given player is playing that week
         for game in games:
-            if usingTestData or (game['home_team'] == player['team'] or game['away_team'] == player['team']) and isSoonestGame(game['commence_time']):
+            print('Player Team: ' + player['team'] + '\nGame Home Team: ' + game['home_team'])
+            if usingTestData or (teamNameEquals(game['home_team'], player['team']) or teamNameEquals(game['away_team'], player['team'])) and isSoonestGame(game['commence_time']):
                 player['game_id'] = game['id']
         
         # If the player is not playing that week, add them to InvalidPlayers list and throw error before hitting API endpoints     
@@ -53,6 +54,9 @@ def getOdds(players):
             if player['game_id'] is None:
                 pass # Simply pass - the above if statement is checking if the player is playing that week
         except NameError:
+                invalidPlayers.add(player['position'] + ': ' + player['name'])
+                invalidPlayer = True
+        except KeyError:
                 invalidPlayers.add(player['position'] + ': ' + player['name'])
                 invalidPlayer = True
 
@@ -83,7 +87,7 @@ def getOdds(players):
             estimatedPointsPerPlayer[player['position']].append(estimatePoints(player))
     
     if invalidPlayer:
-        raise Exception('Could not find data on the following players. They are likely not playing or have no props:\n' + '\n'.join(invalidPlayers))
+        raise Exception('Could not find data on the following players. They are likely not playing, already have played, or have no props:\n' + '\n'.join(invalidPlayers))
     return {
         'player-data': createLineup(estimatedPointsPerPlayer),
         'remaining-requests': getRemainingRequests(gameEventEndpoint)
@@ -124,3 +128,72 @@ def getRemainingRequests(endpoint):
             return response.headers['x-requests-remaining']
     except requests.exceptions.RequestException as e:
         raise Exception('Could not hit API. URL: ' + endpoint + '. Exception: ' + getattr(e, 'message', repr(e)))
+    
+# Custom equals function that checks if full team names equal acronyms
+def teamNameEquals(team, playerTeam):
+    if (team == 'Arizona Cardinals' and playerTeam == 'ARI'):
+        return True
+    elif (team == 'Atlanta Falcons' and playerTeam == 'ATL'):
+        return True
+    elif (team == 'Baltimore Ravens' and playerTeam == 'BAL'):
+        return True
+    elif (team == 'Buffalo Bills' and playerTeam == 'BUF'):
+        return True
+    elif (team == 'Carolina Panthers' and playerTeam == 'CAR'):
+        return True
+    elif (team == 'Chicago Bears' and playerTeam == 'CHI'):
+        return True
+    elif (team == 'Cincinnati Bengals' and playerTeam == 'CIN'):
+        return True
+    elif (team == 'Cleveland Browns' and playerTeam == 'CLE'):
+        return True
+    elif (team == 'Dallas Cowboys' and playerTeam == 'DAL'):
+        return True
+    elif (team == 'Denver Broncos' and playerTeam == 'DEN'):
+        return True
+    elif (team == 'Detroit Lions' and playerTeam == 'DET'):
+        return True
+    elif (team == 'Green Bay Packers' and playerTeam == 'GB'):
+        return True
+    elif (team == 'Houston Texans' and playerTeam == 'HOU'):
+        return True
+    elif (team == 'Indianapolis Colts' and playerTeam == 'IND'):
+        return True
+    elif (team == 'Jacksonville Jaguars' and playerTeam == 'JAX'):
+        return True
+    elif (team == 'Kansas City Chiefs' and playerTeam == 'KC'):
+        return True
+    elif (team == 'Las Vegas Raiders' and playerTeam == 'LV'):
+        return True
+    elif (team == 'Los Angeles Chargers' and playerTeam == 'LAC'):
+        return True
+    elif (team == 'Los Angeles Rams' and playerTeam == 'LAR'):
+        return True
+    elif (team == 'Miami Dolphins' and playerTeam == 'MIA'):
+        return True
+    elif (team == 'Minnesota Vikings' and playerTeam == 'MIN'):
+        return True
+    elif (team == 'New England Patriots' and playerTeam == 'NE'):
+        return True
+    elif (team == 'New Orleans Saints' and playerTeam == 'NO'):
+        return True
+    elif (team == 'New York Giants' and playerTeam == 'NYG'):
+        return True
+    elif (team == 'New York Jets' and playerTeam == 'NYJ'):
+        return True
+    elif (team == 'Philadelphia Eagles' and playerTeam == 'PHI'):
+        return True
+    elif (team == 'Pittsburgh Steelers' and playerTeam == 'PIT'):
+        return True
+    elif (team == 'San Francisco 49ers' and playerTeam == 'SF'):
+        return True
+    elif (team == 'Seattle Seahawks' and playerTeam == 'SEA'):
+        return True
+    elif (team == 'Tampa Bay Buccaneers' and playerTeam == 'TB'):
+        return True
+    elif (team == 'Tennessee Titans' and playerTeam == 'TEN'):
+        return True
+    elif (team == 'Washington Commanders' and playerTeam == 'WAS'):
+        return True
+    else:
+        return team == playerTeam

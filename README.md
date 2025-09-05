@@ -19,6 +19,7 @@ ULP is primarily written via a combination of Python and Vue. Use of ULP require
 - Python is installed
 - Vue is installed
 - You have an API key for The Odds API
+- You have an API key for Sports Data IO
 
 ## Development Setup
 
@@ -29,6 +30,7 @@ To set up your development environment for this project, follow these steps:
 3. Run ```npm install```
 4. Run ```npm run build```
 5. Create an environment variable on your machine ```ODDS_API_KEY``` equal to your The Odds API key
+6. Create a ```.env.local``` file in your ```frontend/``` folder. Within that file, create a variable named ```VUE_APP_PLAYER_DATA_API_KEY``` and set it equal to your API key for Sports Data IO.
 
 ## Usage
 
@@ -54,6 +56,9 @@ To set up your development environment for this project, follow these steps:
 - [X] Update frontend to display the ideal lineup on-screen
 
 ## Planned Improvements
+
+- [ ] Automatically load player data into a JSON variable upon load
+- [ ] Create a loading screen so people have to wait until JSON data is loaded before interacting
 
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
 - [ ] Add ability to Super Flex (use QB as)
@@ -86,7 +91,7 @@ To set up your development environment for this project, follow these steps:
 ## Tools Used
 
 - [The Odds API](https://the-odds-api.com/)
-- [NFL-Data](https://github.com/hvpkod/NFL-Data/tree/main)
+- [Sports Data IO](https://sportsdata.io/)
 - npm
 - pip
 - Python
