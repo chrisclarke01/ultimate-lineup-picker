@@ -45,7 +45,6 @@ def getOdds(players):
 
         # Check every game being played to see if the given player is playing that week
         for game in games:
-            print('Player Team: ' + player['team'] + '\nGame Home Team: ' + game['home_team'])
             if usingTestData or (teamNameEquals(game['home_team'], player['team']) or teamNameEquals(game['away_team'], player['team'])) and isSoonestGame(game['commence_time']):
                 player['game_id'] = game['id']
         
