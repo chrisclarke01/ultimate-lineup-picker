@@ -64,6 +64,8 @@
       <button @click='removePlayer(player)'>Remove Player</button>
     </li>
   </ul>
+  <button @click='loadPlayerData'>Load Player Data (To Be Removed)</button>
+  <br/>
   <button @click='analyzeRoster'>Analyze Roster</button>
   <br/>
   <button @click='restart'>Clear All Players & Lineup</button>
@@ -88,8 +90,11 @@
   
 <script setup>
   import { ref } from 'vue'
-  import playerJson from '../assets/players.json';
   import PlayerCard from './PlayerCard.vue';
+
+  // Player data API Key
+  const PLAYER_DATA_API_KEY = process.env.VUE_APP_PLAYER_DATA_API_KEY;
+  let playerData = null;
 
   // Flag to display the settings
   const settingsChosen = ref(false);
@@ -162,17 +167,62 @@
   function generateCards(name) {
     playerOptions = ref([]);
     if (name.length > 2) {
-      for (const key in playerJson) {
-        const curr = playerJson[key];
-        const currName = curr['PlayerName'].split('.').join('').split('\'').join('').substring(0, name.length);
-        if (currName.toUpperCase() === name.toUpperCase() && playerOptions.value.length <= 5) {
-          playerOptions.value.push({
-            name: curr['PlayerName'],
-            position: curr['Pos'],
-            team: curr['Team']
-          });
+      for (const key in playerData) {
+        const curr = playerData[key];
+        if (curr['Status'] === 'Active' && (curr['FantasyPosition'] === 'QB' || curr['FantasyPosition'] === 'WR' || curr['FantasyPosition'] === 'RB' || curr['FantasyPosition'] === 'TE' || curr['FantasyPosition'] === 'K')) {
+          const currName = curr['Name'].split('.').join('').split('\'').join('').substring(0, name.length);
+          if (currName.toUpperCase() === name.toUpperCase() && playerOptions.value.length <= 5) {
+            playerOptions.value.push({
+              name: curr['Name'],
+              position: curr['FantasyPosition'],
+              team: curr['Team']
+            });
+          }
         }
       }
+    }
+  }
+  
+  /**
+   * Loads player data by accessing SportsDataIO API and returning a JSON list of all NFL players.
+   * Specifically modifies to only include active players in positions we care about, for speed.
+   */
+  async function loadPlayerData() {
+    if (playerData == null) {
+      // URL of the SportsDataIO API
+      const url = 'https://api.sportsdata.io/v3/nfl/scores/json/Players?key=' + PLAYER_DATA_API_KEY;
+
+      // Format to send the message.
+      const options = {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type':'application/json'
+        }
+      }
+      
+      // Hit API, and receive response.
+      // Store response in playerData.
+      await fetch(url, options)
+      .then(response => {
+        if (!response.ok) {
+          response.json()
+          .then(data => {
+            alert(data['message']);
+          });
+          throw new Error('Could not communicate with server.');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        playerData = data;
+      })
+      .catch(error => {
+        console.log('Fetch error: ', error);
+      });
+
+
     }
   }
   
