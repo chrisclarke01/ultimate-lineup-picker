@@ -10,37 +10,37 @@
       
       <br />
       QB Amount<input type='radio' value='1' name='qb' v-model='minQbNum'>1
-      <input checked type='radio' value='2' name='qb' v-model='minQbNum'>2
+      <input type='radio' value='2' name='qb' v-model='minQbNum'>2
       <input type='radio' value='3' name='qb' v-model='minQbNum'>3
       
       <br />
       RB Amount<input type='radio' value='1' name='rb' v-model='minRbNum'>1
-      <input checked type='radio' value='2' name='rb' v-model='minRbNum'>2
+      <input type='radio' value='2' name='rb' v-model='minRbNum'>2
       <input type='radio' value='3' name='rb' v-model='minRbNum'>3
       
       <br />
       WR Amount<input type='radio' value='1' name='wr' v-model='minWrNum'>1
-      <input checked type='radio' value='2' name='wr' v-model='minWrNum'>2
+      <input type='radio' value='2' name='wr' v-model='minWrNum'>2
       <input type='radio' value='3' name='wr' v-model='minWrNum'>3
       
       <br />
       TE Amount<input type='radio' value='1' name='te' v-model='minTeNum'>1
-      <input checked type='radio' value='2' name='te' v-model='minTeNum'>2
+      <input type='radio' value='2' name='te' v-model='minTeNum'>2
       <input type='radio' value='3' name='te' v-model='minTeNum'>3
 
       <br />
       FLEX Amount<input type='radio' value='1' name='flex' v-model='minFlexNum'>1
-      <input checked type='radio' value='2' name='flex' v-model='minFlexNum'>2
+      <input type='radio' value='2' name='flex' v-model='minFlexNum'>2
       <input type='radio' value='3' name='flex' v-model='minFlexNum'>3
 
       <br />
       DST Amount<input type='radio' value='1' name='dst' v-model='minDstNum'>1
-      <input checked type='radio' value='2' name='dst' v-model='minDstNum'>2
+      <input type='radio' value='2' name='dst' v-model='minDstNum'>2
       <input type='radio' value='3' name='dst' v-model='minDstNum'>3
       
       <br />
       K Amount<input type='radio' value='1' name='k' v-model='minKNum'>1
-      <input checked type='radio' value='2' name='k' v-model='minKNum'>2
+      <input type='radio' value='2' name='k' v-model='minKNum'>2
       <input type='radio' value='3' name='k' v-model='minKNum'>3
     </label>
     <hr />
@@ -102,16 +102,16 @@
   const loading = ref(false);
 
   // Minimum required amounts of every position
-  const minQbNum = ref(2);
-  const minRbNum = ref(2);
-  const minWrNum = ref(2);
-  const minTeNum = ref(1);
-  const minFlexNum = ref(1);
-  const minDstNum = ref(1);
-  const minKNum = ref(1);
+  let minQbNum = ref(1);
+  let minRbNum = ref(2);
+  let minWrNum = ref(2);
+  let minTeNum = ref(1);
+  let minFlexNum = ref(1);
+  let minDstNum = ref(1);
+  let minKNum = ref(1);
 
   // Track whether test or live data is to be used
-  const useTestData = ref(false);
+  let useTestData = ref(false);
   
   // Give each player a unique ID, name, position, and team
   let id = 0;
