@@ -57,11 +57,8 @@ To set up your development environment for this project, follow these steps:
 
 ## Planned Improvements
 
-- [ ] Automatically load player data into a JSON variable upon load
-- [ ] Create a loading screen so people have to wait until JSON data is loaded before interacting
-
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
-- [ ] Add ability to Super Flex (use QB as)
+- [ ] Add ability to Super Flex (use QB as FLEX)
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
 
@@ -78,6 +75,7 @@ To set up your development environment for this project, follow these steps:
 
 ## Completed Improvements
 
+- [X] Automatically load player data into a JSON variable upon load
 - [X] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 - [X] Add loading animation while backend calculates
 - [X] Add a way to restrict odds for only the immediate next game being played

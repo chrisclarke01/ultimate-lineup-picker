@@ -64,8 +64,6 @@
       <button @click='removePlayer(player)'>Remove Player</button>
     </li>
   </ul>
-  <button @click='loadPlayerData'>Load Player Data (To Be Removed)</button>
-  <br/>
   <button @click='analyzeRoster'>Analyze Roster</button>
   <br/>
   <button @click='restart'>Clear All Players & Lineup</button>
@@ -89,7 +87,7 @@
 </template>
   
 <script setup>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import DefenseRoster from '../assets/defenses.json'
   import PlayerCard from './PlayerCard.vue';
 
@@ -144,6 +142,14 @@
 
   // List of up to 5 potential players to display
   let playerOptions = ref([]);
+
+  /**
+   * Functions to be run on page load
+   */
+  onMounted(() => {
+    // Immediately upon page load, load player data
+    loadPlayerData();
+  })
   
   // Add a player to the input list
   function addPlayer(player) {
