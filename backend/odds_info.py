@@ -52,10 +52,7 @@ def getOdds(players):
         try:
             if player['game_id'] is None:
                 pass # Simply pass - the above if statement is checking if the player is playing that week
-        except NameError:
-                invalidPlayers.add(player['position'] + ': ' + player['name'])
-                invalidPlayer = True
-        except KeyError:
+        except (NameError, KeyError):
                 invalidPlayers.add(player['position'] + ': ' + player['name'])
                 invalidPlayer = True
 
@@ -71,7 +68,10 @@ def getOdds(players):
                 if bookmaker['markets']:
                     playerProps = bookmaker['markets']
                     break
+                else:
+                    invalidPlayer = True
 
+        if not invalidPlayer:
             player['props'] = {}
 
             for market in playerProps:
@@ -101,12 +101,16 @@ def isSoonestGame(gameTime):
     return int(delta.days) <= 6
         
 def hitApi(endpoint):
-    try:
-        response = requests.get(endpoint)
-        if response.status_code == 200:
-            return response.json()
-    except requests.exceptions.RequestException as e:
-        raise Exception('Could not hit API. URL: ' + endpoint + '. Exception: ' + getattr(e, 'message', repr(e)))
+    if getRemainingRequests(endpoint) == '0':
+        raise Exception('No remaining API requests. Cannot use live Odds API Data.')
+    else:
+        try:
+            response = requests.get(endpoint)
+            if response.status_code == 200:
+                return response.json()
+        except requests.exceptions.RequestException as e:
+            endpoint = endpoint.replace(os.environ['ODDS_API_KEY'], "hiddnApiKey")
+            raise Exception('Could not hit API. URL: ' + endpoint + '. Exception: ' + getattr(e, 'message', repr(e)))
     
 def getPropsEndpoint(playerPosition):
     if playerPosition == 'QB':
