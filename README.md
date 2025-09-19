@@ -57,6 +57,9 @@ To set up your development environment for this project, follow these steps:
 
 ## Planned Improvements
 
+- [ ] Fix minimum position settings to percolate to backend
+- [ ] Investigate why some players show 0 points
+
 - [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
 - [ ] Add ability to Super Flex (use QB as FLEX)
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
