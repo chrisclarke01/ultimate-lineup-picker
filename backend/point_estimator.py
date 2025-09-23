@@ -1,5 +1,3 @@
-import pprint
-
 # QB Modifiers
 PASS_YARD_MODIFIER = 0.04
 RUSH_YARD_MODIFIER = 0.1
@@ -31,6 +29,7 @@ def estimatePoints(player):
     else:
         print('Error: ' + player['name'] + ' is not a known player position.')
         return None
+    playerPoints['points'] = str(round(playerPoints['points'], 2))
     return playerPoints
     
 def inferQbPoints(player):

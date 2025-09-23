@@ -28,6 +28,7 @@ def getOdds(players):
     url = 'https://api.the-odds-api.com/'
     apiKey = os.environ['ODDS_API_KEY']
     usingTestData = players['usingTestData']
+    playerLimits = players['playerLimits']
 
     estimatedPointsPerPlayer = {}
     estimatedPointsPerPlayer['QB'] = []
@@ -41,7 +42,7 @@ def getOdds(players):
     invalidPlayer = False
     for player in players['players']:
         gameEventEndpoint = url + 'v4/sports/americanfootball_nfl/events?apiKey=' + apiKey
-        games = hitApi(gameEventEndpoint)
+        games = hitApi(gameEventEndpoint, usingTestData)
 
         # Check every game being played to see if the given player is playing that week
         for game in games:
@@ -60,7 +61,7 @@ def getOdds(players):
             playerProps = None
             if not usingTestData:
                 propsEndPoint = url + 'v4/sports/americanfootball_nfl/events/' + player['game_id'] + '/odds?apiKey=' + apiKey + '&regions=us&oddsFormat=american&markets=' + getPropsEndpoint(player['position'])
-                playerProps = hitApi(propsEndPoint)
+                playerProps = hitApi(propsEndPoint, usingTestData)
             else:
                 playerProps = json.load(open('testData.json'))
 
@@ -88,7 +89,7 @@ def getOdds(players):
     if invalidPlayer:
         raise Exception('Could not find data on the following players. They are likely not playing, already have played, or have no props:\n' + '\n'.join(invalidPlayers))
     return {
-        'player-data': createLineup(estimatedPointsPerPlayer),
+        'player-data': createLineup(playerLimits, estimatedPointsPerPlayer),
         'remaining-requests': getRemainingRequests(gameEventEndpoint)
     }
 
@@ -100,8 +101,8 @@ def isSoonestGame(gameTime):
     delta = t0 - t1
     return int(delta.days) <= 6
         
-def hitApi(endpoint):
-    if getRemainingRequests(endpoint) == '0':
+def hitApi(endpoint, usingTestData):
+    if getRemainingRequests(endpoint) == '0' and not usingTestData:
         raise Exception('No remaining API requests. Cannot use live Odds API Data.')
     else:
         try:

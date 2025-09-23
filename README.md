@@ -57,10 +57,8 @@ To set up your development environment for this project, follow these steps:
 
 ## Planned Improvements
 
-- [ ] Fix minimum position settings to percolate to backend
 - [ ] Investigate why some players show 0 points
 
-- [ ] Allow users to adjust player amount (ie, 2 QB, Super Flex, 1 WR, etc)
 - [ ] Add ability to Super Flex (use QB as FLEX)
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring
 - [ ] Allow users to adjust point values for player stats (ie, change how many points per yard, value of a TD, etc)
@@ -78,6 +76,8 @@ To set up your development environment for this project, follow these steps:
 
 ## Completed Improvements
 
+- [X] Allow users to adjust player amount (ie, 2 QB, 1 WR, etc)
+- [X] Fix minimum position settings to percolate to backend
 - [X] Automatically load player data into a JSON variable upon load
 - [X] Add ability to automatically check the position, team, and upcoming opponent of each entered player
 - [X] Add loading animation while backend calculates

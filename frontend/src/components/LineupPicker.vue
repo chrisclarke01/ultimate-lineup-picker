@@ -330,6 +330,17 @@
     if (missingPlayers.length > 0) {
       alert('Need more players: \n' + missingPlayers.join('\n'))
     } else {
+      // Create dictionary to send player limit amount to backend
+      let playerLimits = ref({
+        'qb':minQbNum,
+        'rb':minRbNum,
+        'wr':minWrNum,
+        'te':minTeNum,
+        'flex':minFlexNum,
+        'dst':minDstNum,
+        'k':minKNum
+    });
+
       // URL of the backend
       const url = 'http://localhost:5000/api/players';
 
@@ -341,6 +352,7 @@
           'Content-Type':'application/json'
         },
         body: JSON.stringify({
+          playerLimits: playerLimits.value,
           usingTestData: useTestData.value,
           players: players.value,
         })

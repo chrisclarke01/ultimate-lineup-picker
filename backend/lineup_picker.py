@@ -1,13 +1,12 @@
-# Player amounts
-QB_LIMIT = 1
-WR_LIMIT = 2
-RB_LIMIT = 2
-TE_LIMIT = 1
-FLEX_LIMIT = 1
-DST_LIMIT = 1
-K_LIMIT = 1
-
-def createLineup(estimatedPointsPerPlayer):
+def createLineup(playerLimits, estimatedPointsPerPlayer):    
+    QB_LIMIT = int(playerLimits['qb'])
+    WR_LIMIT = int(playerLimits['rb'])
+    RB_LIMIT = int(playerLimits['wr'])
+    TE_LIMIT = int(playerLimits['te'])
+    FLEX_LIMIT = int(playerLimits['flex'])
+    DST_LIMIT = int(playerLimits['dst'])
+    K_LIMIT = int(playerLimits['k'])
+    
     sortedLineUp = []
     
     for i in range(QB_LIMIT):
@@ -18,8 +17,9 @@ def createLineup(estimatedPointsPerPlayer):
         sortedLineUp.append(getLargest(estimatedPointsPerPlayer['RB']))
     for i in range(TE_LIMIT):
         sortedLineUp.append(getLargest(estimatedPointsPerPlayer['TE']))
+    flexPlayers = estimatedPointsPerPlayer['WR'] + estimatedPointsPerPlayer['RB'] + estimatedPointsPerPlayer['TE']
     for i in range(FLEX_LIMIT):
-        sortedLineUp.append(getLargest(estimatedPointsPerPlayer['WR'] + estimatedPointsPerPlayer['RB'] + estimatedPointsPerPlayer['TE']))
+        sortedLineUp.append(getLargest(flexPlayers))
     for i in range(DST_LIMIT):
         sortedLineUp.append(getLargest(estimatedPointsPerPlayer['DST']))
     for i in range(K_LIMIT):
