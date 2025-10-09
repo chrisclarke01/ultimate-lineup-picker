@@ -1,9 +1,13 @@
 from point_estimator import estimatePoints
 from lineup_picker import createLineup
-import requests
-from datetime import date
+import requests, logging
+from datetime import date, datetime
 import os
 import json
+
+# Log configuration
+LOG_FILENAME = datetime.now().strftime('logs/logfile_%H_%M_%S_%d_%m_%Y.log')
+logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO)
 
 # QB Markets
 PASS_YARDS = 'player_pass_yds' 
@@ -62,6 +66,7 @@ def getOdds(players):
             if not usingTestData:
                 propsEndPoint = url + 'v4/sports/americanfootball_nfl/events/' + player['game_id'] + '/odds?apiKey=' + apiKey + '&regions=us&oddsFormat=american&markets=' + getPropsEndpoint(player['position'])
                 playerProps = hitApi(propsEndPoint, usingTestData)
+                logging.info('\nPlayer: ' + player['name'] + '\n' + json.dumps(playerProps, indent=4) + '\n')
             else:
                 playerProps = json.load(open('testData.json'))
 

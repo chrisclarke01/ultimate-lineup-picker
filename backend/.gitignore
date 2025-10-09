@@ -21,3 +21,6 @@ venv/
 
 # test file
 testData.json
+
+# Logs
+logs/
