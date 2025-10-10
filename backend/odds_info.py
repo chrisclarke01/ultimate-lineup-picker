@@ -14,19 +14,23 @@ PASS_YARDS = 'player_pass_yds'
 PASS_TDS = 'player_pass_tds'
 INTERCEPTIONS = 'player_pass_interceptions'
 QB_RUSH_YARDS = 'player_rush_yds'
+QB_PROPS = ['player_anytime_td', 'player_pass_yds', 'player_pass_yds', 'player_pass_tds', 'player_pass_interceptions']
 
 # RB/WR/TE Markets
 RUSH_YARDS = 'player_rush_yds'
 RECEIVING_YARDS = 'player_reception_yds'
 TOTAL_TDS = 'player_anytime_td'
 RECEPTIONS = 'player_receptions'
+FLEX_PROPS = ['player_anytime_td', 'player_reception_yds', 'player_rush_yds', 'player_receptions']
 
 # D/ST Markets
 OPPOSING_TEAM_TOTALS = 'team_totals'
+DST_PROPS = ['team_totals']
 
 # K Markets
 FIELD_GOALS = 'player_field_goals'
 EXTRA_POINTS = 'player_pats'
+K_PROPS = ['player_field_goals', 'player_pats']
 
 def getOdds(players):
     url = 'https://api.the-odds-api.com/'
@@ -71,7 +75,7 @@ def getOdds(players):
                 playerProps = json.load(open('testData.json'))
 
             for bookmaker in playerProps['bookmakers']:
-                if bookmaker['markets']:
+                if checkBookie(bookmaker, player['position']):
                     playerProps = bookmaker['markets']
                     break
                 else:
@@ -120,7 +124,7 @@ def hitApi(endpoint, usingTestData):
     
 def getPropsEndpoint(playerPosition):
     if playerPosition == 'QB':
-        return PASS_YARDS + ',' + QB_RUSH_YARDS + ',' + PASS_TDS + ',' + INTERCEPTIONS
+        return TOTAL_TDS + ',' + PASS_YARDS + ',' + QB_RUSH_YARDS + ',' + PASS_TDS + ',' + INTERCEPTIONS
     elif playerPosition == 'RB' or playerPosition == 'WR' or playerPosition == 'TE':
         return RUSH_YARDS + ',' + TOTAL_TDS + ',' + RECEIVING_YARDS + ',' + RECEPTIONS
     elif playerPosition == 'DST':
@@ -137,6 +141,21 @@ def getRemainingRequests(endpoint):
             return response.headers['x-requests-remaining']
     except requests.exceptions.RequestException as e:
         raise Exception('Could not hit API. URL: ' + endpoint + '. Exception: ' + getattr(e, 'message', repr(e)))
+    
+# Checks betting markets to ensure provided bookmakers have all markets we need
+def checkBookie(bookmaker, position):
+    if bookmaker['markets']:
+        markets = set()
+        for market in bookmaker['markets']:
+            markets.add(market['key'])
+        if position == 'QB':
+            return set(QB_PROPS).issubset(markets)
+        elif position == 'RB' or position == 'WR' or position == 'TE':
+            return set(FLEX_PROPS).issubset(markets)
+        elif position == 'DST':
+            return set(DST_PROPS).issubset(markets)
+        elif position == 'K':
+            return set(K_PROPS).issubset(markets)
     
 # Custom equals function that checks if full team names equal acronyms
 def teamNameEquals(team, playerTeam):

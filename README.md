@@ -57,7 +57,7 @@ To set up your development environment for this project, follow these steps:
 
 ## Planned Improvements
 
-- [ ] Update algorithm to find bookmakers with all markets necessary to calculate player points instead of just the first bookmaker
+- [ ] Update algorithm to find bookmakers with all markets necessary to calculate player points instead of just the first bookmaker. TODO: VERIFY THIS CHANGE!
 
 - [ ] Add ability to Super Flex (use QB as FLEX)
 - [ ] Allow users to pick PPR, half-PPR, and Standard scoring

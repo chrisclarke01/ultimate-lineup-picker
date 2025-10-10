@@ -15,6 +15,18 @@ TD_MODIFIER = 6
 FIELD_GOAL_MODIFIER = 3
 PAT_MODIFIER = 1
 
+# QB Props
+QB_PROPS = ['player_anytime_td', 'player_pass_yds', 'player_pass_yds', 'player_pass_tds', 'player_pass_interceptions']
+
+# RB Props
+FLEX_PROPS = ['player_anytime_td', 'player_reception_yds', 'player_rush_yds', 'player_receptions']
+
+# DST Props
+DST_PROPS = ['team_totals']
+
+# K Props
+K_PROPS = ['player_field_goals', 'player_pats']
+
 def estimatePoints(player):
     playerPoints = {'name':player['name'], 'position':player['position']}
 
@@ -35,36 +47,41 @@ def estimatePoints(player):
 def inferQbPoints(player):
     totalPoints = 0.0
     for prop, dataPoint in player['props'].items():
-        if prop == 'player_pass_yds' or prop == 'player_pass_yds' or prop == 'player_pass_tds' or prop == 'player_pass_interceptions':
-            line = chooseLineFromOverUnder(dataPoint)
-            if prop == 'player_pass_yds':
-                totalPoints = totalPoints + (PASS_YARD_MODIFIER * line)
-            elif prop == 'player_rush_yds':
-                totalPoints = totalPoints + (RUSH_YARD_MODIFIER * line)
-            elif prop == 'player_pass_tds':
-                totalPoints = totalPoints + (PASS_TD_MODIFIER * line)
-            elif prop == 'player_pass_interceptions':
-                totalPoints = totalPoints - (INT_MODIFIER * line)
+        if prop in QB_PROPS:
+            if prop == 'player_anytime_td':
+                line = chooseLineFromAnyTimeTd(dataPoint)
+                totalPoints = totalPoints + (TD_MODIFIER * line)
+            else:
+                line = chooseLineFromOverUnder(dataPoint)
+                if prop == 'player_pass_yds':
+                    totalPoints = totalPoints + (PASS_YARD_MODIFIER * line)
+                elif prop == 'player_rush_yds':
+                    totalPoints = totalPoints + (RUSH_YARD_MODIFIER * line)
+                elif prop == 'player_pass_tds':
+                    totalPoints = totalPoints + (PASS_TD_MODIFIER * line)
+                elif prop == 'player_pass_interceptions':
+                    totalPoints = totalPoints - (INT_MODIFIER * line)
     return totalPoints
 
 def inferRbWrTePoints(player):
     totalPoints = 0.0
     for prop, dataPoint in player['props'].items():
-        if prop == 'player_anytime_td':
-            line = chooseLineFromAnyTimeTd(dataPoint)
-            totalPoints = totalPoints + (TD_MODIFIER * line)
-        elif prop == 'player_reception_yds' or prop == 'player_rush_yds' or prop == 'player_receptions':
-            line = chooseLineFromOverUnder(dataPoint)
-            if prop == 'player_reception_yds' or prop == 'player_rush_yds':
-                totalPoints = totalPoints + (TOTAL_YARDS_MODIFIER * line)
-            elif prop == 'player_receptions':
-                totalPoints = totalPoints + (RECEPTIONS_MODIFIER * line)
+        if prop in FLEX_PROPS:
+            if prop == 'player_anytime_td':
+                line = chooseLineFromAnyTimeTd(dataPoint)
+                totalPoints = totalPoints + (TD_MODIFIER * line)
+            else:
+                line = chooseLineFromOverUnder(dataPoint)
+                if prop == 'player_reception_yds' or prop == 'player_rush_yds':
+                    totalPoints = totalPoints + (TOTAL_YARDS_MODIFIER * line)
+                elif prop == 'player_receptions':
+                    totalPoints = totalPoints + (RECEPTIONS_MODIFIER * line)
     return totalPoints
 
 def inferDstPoints(player):
     totalPoints = 0.0
     for prop, dataPoint in player['props'].items():
-        if prop == 'team_totals':
+        if prop in DST_PROPS:
             line = chooseLineFromTeamTotals(dataPoint)
             if line == 0:
                 totalPoints = totalPoints + 5
@@ -85,7 +102,7 @@ def inferDstPoints(player):
 def inferKPoints(player):
     totalPoints = 0.0
     for prop, dataPoint in player['props'].items():
-        if prop == 'player_field_goals' or prop == 'player_pats':
+        if prop in K_PROPS:
             line = chooseLineFromOverUnder(dataPoint)
             if prop == 'player_field_goals':
                 totalPoints = totalPoints + (FIELD_GOAL_MODIFIER * line)
